@@ -40,7 +40,7 @@ void UserManagement::readLevelData()
             sequenceValues=values[1].split(",");
             for(int i=0;i<sequenceValues.size();i++)
             {
-            levelSequence.append(sequenceValues[i]);
+                levelSequence.append(sequenceValues[i]);
             }
             levelRows.append(values[2]);
             levelStart.append(values[3]);
