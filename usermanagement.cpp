@@ -4,9 +4,9 @@ UserManagement::UserManagement()
 {
 }
 
-void UserManagement::readUserData()
+void UserManagement::readUserData(QString fileName)
 {
-    QFile players(userName);
+    QFile players(fileName);
     if (players.open(QIODevice::ReadOnly))
     {
         QTextStream reader(&players);
@@ -16,17 +16,26 @@ void UserManagement::readUserData()
         {
             values=data.split(":");
             userTimestamp.append(values[0]);
-            userPlayer.append(values[1]);
-            userLevel.append(values[2]);
+            if(nameValidation(values[1]))
+            {
+                userPlayer.append(values[1]);
+            }
+            else userPlayer.append("");
+            if(levelValidation(values[2]))
+            {
+                userLevel.append(values[2]);
+            }
+            else userLevel.append("");
             data = reader.readLine();
         }
         players.close();
     }
 }
 
-void UserManagement::readLevelData()
+void UserManagement::readLevelData(QString fileName)
 {
-    QFile levels(levelName);
+    int time=QDateTime::currentDateTime().toTime_t();
+    QFile levels(fileName);
     if (levels.open(QIODevice::ReadOnly))
     {
         QTextStream reader(&levels);
@@ -50,4 +59,68 @@ void UserManagement::readLevelData()
         }
         levels.close();
     }
+}
+
+void UserManagement::createUser(QString name)
+{
+    QString time=QString::number(QDateTime::currentDateTime().toTime_t());
+    userTimestamp.append(time);
+    if(nameValidation(name))
+    {
+        userPlayer.append(name);
+    }
+    else userPlayer.append("");;
+    userLevel.append("0");
+
+}
+
+void UserManagement::saveUsers(QString fileName)
+{
+    QFile players(fileName);
+    if (players.open(QFile::WriteOnly|QFile::Truncate))
+    {
+        QTextStream write(&players);
+        for(int i=0; i<userPlayer.size();i++)
+        {
+            write<<userTimestamp[i]<<":"<<userPlayer[i]<<":"<<userLevel[i]<<"\r\n";
+        }
+        players.close();
+    }
+}
+
+bool UserManagement::nameValidation(QString name)
+{
+    name=name.toLower();
+    bool valid=false;
+    if(name.size()<=10)
+    {
+        for(int i=0;i<name.size();i++)
+        {
+            if(name[i].isLetterOrNumber())
+                valid=true;
+            else
+            {
+                valid=false;
+                break;
+            }
+        }
+    }
+
+    if(valid==true)
+        return true;
+    else
+        return false;
+}
+
+bool UserManagement::levelValidation(QString level)
+{
+    bool valid=false;
+    for(int i=0;i<level.size();i++)
+    {
+        if(level[i].isDigit()&&level.toInt()>=0&&level.toInt()<=100)
+            valid=true;
+    }
+
+    return valid;
+
 }
