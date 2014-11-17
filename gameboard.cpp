@@ -10,7 +10,4 @@ QString GameBoard::setMainScreen()
     currentScreen= new QPixmap(startScreen);
 }
 
-QPixmap GameBoard::getCurrentScreen()
-{
-    return *currentScreen;
-}
+

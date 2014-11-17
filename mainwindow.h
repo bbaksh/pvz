@@ -21,9 +21,17 @@ public:
 
 private slots:
 
+
+   void on_newButton_clicked();
+
+   void on_deleteButton_clicked();
+
+   void on_quitButton_clicked();
+
 private:
     QGraphicsScene *scene;
     GameBoard pvz;
+    QString userPathName;
 };
 
 #endif // MAINWINDOW_H

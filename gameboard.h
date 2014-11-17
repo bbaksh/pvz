@@ -12,7 +12,7 @@ private:
 public:
     GameBoard();
     QString setMainScreen();
-    QPixmap getCurrentScreen();
+
 
 };
 

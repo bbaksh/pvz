@@ -142,11 +142,7 @@
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_2">
      <item>
-      <widget class="QPushButton" name="userButton">
-       <property name="text">
-        <string>User</string>
-       </property>
-      </widget>
+      <widget class="QComboBox" name="userButton"/>
      </item>
      <item>
       <widget class="QLineEdit" name="levelDisplay">
@@ -173,7 +169,7 @@
      <item>
       <widget class="QLineEdit" name="nameDisplay">
        <property name="text">
-        <string>Name</string>
+        <string>Please enter a name</string>
        </property>
       </widget>
      </item>
@@ -194,6 +190,25 @@
       <width>91</width>
       <height>31</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="userButtonLabel">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>140</y>
+      <width>121</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="layoutDirection">
+     <enum>Qt::LeftToRight</enum>
+    </property>
+    <property name="text">
+     <string>Users:</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
   </widget>

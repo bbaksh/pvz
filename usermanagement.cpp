@@ -34,7 +34,6 @@ void UserManagement::readUserData(QString fileName)
 
 void UserManagement::readLevelData(QString fileName)
 {
-    int time=QDateTime::currentDateTime().toTime_t();
     QFile levels(fileName);
     if (levels.open(QIODevice::ReadOnly))
     {
@@ -74,6 +73,13 @@ void UserManagement::createUser(QString name)
 
 }
 
+void UserManagement::deleteUser(int index)
+{
+  userLevel[index]="NULL";
+  userPlayer[index]="NULL";
+  userTimestamp[index]="NULL";
+}
+
 void UserManagement::saveUsers(QString fileName)
 {
     QFile players(fileName);
@@ -82,6 +88,7 @@ void UserManagement::saveUsers(QString fileName)
         QTextStream write(&players);
         for(int i=0; i<userPlayer.size();i++)
         {
+            if(userTimestamp[i]!="NULL"&&userPlayer[i]!="NULL")
             write<<userTimestamp[i]<<":"<<userPlayer[i]<<":"<<userLevel[i]<<"\r\n";
         }
         players.close();
@@ -123,4 +130,26 @@ bool UserManagement::levelValidation(QString level)
 
     return valid;
 
+}
+
+QStringList UserManagement::userSort()
+{
+    bool sorted=false;
+    QStringList sortedTimes=userTimestamp;
+    if(userPlayer.size()>0)
+    {
+    while(sorted==false)
+    {
+        for(int i=0;i<userPlayer.size();i++)
+        {
+            if(sortedTimes[i]<userPlayer[i])
+            {
+                sortedTimes[i]=userPlayer[i];
+                sorted=false;
+            }
+            else sorted=true;
+        }
+    }
+    }
+    return sortedTimes;
 }
