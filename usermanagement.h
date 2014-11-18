@@ -6,6 +6,10 @@
 #include <QTextStream>
 #include <QDateTime>
 #include <QtAlgorithms>
+#include <QApplication>
+#include <QMessageBox>
+#include <iostream>
+
 
 
 class UserManagement
@@ -21,7 +25,7 @@ protected:
     QStringList levelStart;
     QStringList levelInterval;
     QStringList levelDecrement;
-
+    bool close;
 
 public:
     UserManagement();
@@ -32,6 +36,8 @@ public:
     void saveUsers(QString fileName);
     bool nameValidation(QString name);
     bool levelValidation(QString level);
+    bool closeProgram();
+
     QStringList userSort();
 
 

@@ -5,6 +5,7 @@
 #include "gameboard.h"
 #include <QMainWindow>
 #include <QDir>
+#include <iostream>
 
 namespace Ui {
 class MainWindow;
@@ -17,6 +18,7 @@ class MainWindow : public QMainWindow
 public:
     Ui::MainWindow *ui;
     explicit MainWindow(QWidget *parent = 0);
+    void loadButtons();
     ~MainWindow();
 
 private slots:
@@ -32,6 +34,8 @@ private:
     QGraphicsScene *scene;
     GameBoard pvz;
     QString userPathName;
+    QDir playersPath;
+    QDir levelsPath;
 };
 
 #endif // MAINWINDOW_H

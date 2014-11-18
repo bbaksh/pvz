@@ -22,7 +22,7 @@
      <rect>
       <x>120</x>
       <y>0</y>
-      <width>911</width>
+      <width>901</width>
       <height>51</height>
      </rect>
     </property>
@@ -30,56 +30,56 @@
      <item>
       <widget class="QPushButton" name="plant1Button">
        <property name="text">
-        <string>Plant 1</string>
+        <string/>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="plant2Button">
        <property name="text">
-        <string>Plant 2</string>
+        <string/>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="plant3Button">
        <property name="text">
-        <string>Plant 3</string>
+        <string/>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="plant4Button">
        <property name="text">
-        <string>Plant 4</string>
+        <string/>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="plant5Button">
        <property name="text">
-        <string>Plant 5</string>
+        <string/>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="plant6Button">
        <property name="text">
-        <string>Plant 6</string>
+        <string/>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="plant7Button">
        <property name="text">
-        <string>Plant 7</string>
+        <string/>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="plant8Button">
        <property name="text">
-        <string>Plant 8</string>
+        <string/>
        </property>
       </widget>
      </item>

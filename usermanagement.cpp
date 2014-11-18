@@ -2,6 +2,7 @@
 
 UserManagement::UserManagement()
 {
+    close=false;
 }
 
 void UserManagement::readUserData(QString fileName)
@@ -30,6 +31,9 @@ void UserManagement::readUserData(QString fileName)
         }
         players.close();
     }
+    else
+        close=true;
+
 }
 
 void UserManagement::readLevelData(QString fileName)
@@ -58,6 +62,7 @@ void UserManagement::readLevelData(QString fileName)
         }
         levels.close();
     }
+
 }
 
 void UserManagement::createUser(QString name)
@@ -93,6 +98,7 @@ void UserManagement::saveUsers(QString fileName)
         }
         players.close();
     }
+
 }
 
 bool UserManagement::nameValidation(QString name)
@@ -130,6 +136,11 @@ bool UserManagement::levelValidation(QString level)
 
     return valid;
 
+}
+
+bool UserManagement::closeProgram()
+{
+ return close;
 }
 
 QStringList UserManagement::userSort()
