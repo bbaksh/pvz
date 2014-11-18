@@ -2,6 +2,24 @@
 
 GamePlay::GamePlay()
 {
+    sunPoints=100;
+}
+
+void GamePlay::subtractSunPoints(int x)
+{
+    sunPoints=sunPoints-x;
+    if(sunPoints<0)
+        sunPoints=0;
+}
+
+void GamePlay::addSunPoints(int x)
+{
+    sunPoints=sunPoints+x;
+}
+
+int GamePlay::getSunPoints() const
+{
+    return sunPoints;
 }
 
 

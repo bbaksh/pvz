@@ -31,8 +31,7 @@ void UserManagement::readUserData(QString fileName)
         }
         players.close();
     }
-    else
-        close=true;
+
 
 }
 
@@ -62,6 +61,8 @@ void UserManagement::readLevelData(QString fileName)
         }
         levels.close();
     }
+    else
+        close=true;
 
 }
 

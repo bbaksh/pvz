@@ -4,8 +4,13 @@
 
 class GamePlay: public UserManagement
 {
+protected:
+    int sunPoints;
 public:
     GamePlay();
+    void subtractSunPoints(int x);
+    void addSunPoints(int x);
+    int getSunPoints() const;
     struct PeaShooter{
       PeaShooter();
       int cost;

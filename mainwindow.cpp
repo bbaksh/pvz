@@ -10,17 +10,22 @@ MainWindow::MainWindow(QWidget *parent) :
     loadButtons();
     userPathName=playersPath.currentPath()+"/pvz_players.csv";
     pvz.readUserData(playersPath.currentPath()+"/pvz_players.csv");
+    pvz.readLevelData(levelsPath.currentPath()+"/pvz_levels.csv");
     if(pvz.closeProgram())
     {
         QMessageBox quit;
-        quit.setText("Error! “pvz_players.csv” not found!!");
+        quit.setText("Error! “pvz_levels.csv” not found!!");
         quit.setStandardButtons(QMessageBox::Ok);
         quit.exec();
+        while(true)
+        {
         QApplication::quit();
+        }
 
     }
-    pvz.readLevelData(levelsPath.currentPath()+"/pvz_levels.csv");
     ui->userButton->addItems(pvz.userSort());
+    ui->pointsDisplay->setText(QString::number(pvz.getSunPoints()));
+    ui->pointsDisplay->setAlignment(Qt::AlignCenter);
 }
 
 void MainWindow::loadButtons()
@@ -47,20 +52,35 @@ void MainWindow::loadButtons()
 
     ui->plant1Button->setIcon(peashooterIcon);
     ui->plant1Button->setIconSize(plantIcon);
+    ui->plant1Button->setToolTip("Pea Shooter - Cost:100");
+
     ui->plant2Button->setIcon(sunflowerIcon);
     ui->plant2Button->setIconSize(plantIcon);
+    ui->plant2Button->setToolTip("Sun Flower - Cost:50");
+
     ui->plant3Button->setIcon(cherrybombIcon);
     ui->plant3Button->setIconSize(plantIcon);
+    ui->plant3Button->setToolTip("Cherry Bomb - Cost:150");
+
     ui->plant4Button->setIcon(wallnutIcon);
     ui->plant4Button->setIconSize(plantIcon);
+    ui->plant4Button->setToolTip("Wall Nut - Cost:50");
+
     ui->plant5Button->setIcon(potatomineIcon);
     ui->plant5Button->setIconSize(plantIcon);
+    ui->plant5Button->setToolTip("Potato Mine - Cost:25");
+
     ui->plant6Button->setIcon(snowpeaIcon);
     ui->plant6Button->setIconSize(plantIcon);
+    ui->plant6Button->setToolTip("Snow Pea - Cost:175");
+
     ui->plant7Button->setIcon(chomperIcon);
     ui->plant7Button->setIconSize(plantIcon);
+    ui->plant7Button->setToolTip("Chomper - Cost:150");
+
     ui->plant8Button->setIcon(repeaterIcon);
     ui->plant8Button->setIconSize(plantIcon);
+    ui->plant8Button->setToolTip("Repeater - Cost:200");
 }
 
 MainWindow::~MainWindow()

@@ -145,17 +145,9 @@
       <widget class="QComboBox" name="userButton"/>
      </item>
      <item>
-      <widget class="QLineEdit" name="levelDisplay">
-       <property name="font">
-        <font>
-         <italic>false</italic>
-        </font>
-       </property>
-       <property name="layoutDirection">
-        <enum>Qt::LeftToRight</enum>
-       </property>
+      <widget class="QLabel" name="levelDisplay">
        <property name="text">
-        <string>Level</string>
+        <string/>
        </property>
       </widget>
      </item>
