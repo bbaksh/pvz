@@ -8,29 +8,46 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->setupUi(this);
     loadButtons();
+
+    ui->nameDisplay->setPlaceholderText("Please enter a name");
     userPathName=playersPath.currentPath()+"/pvz_players.csv";
     pvz.readUserData(playersPath.currentPath()+"/pvz_players.csv");
     pvz.readLevelData(levelsPath.currentPath()+"/pvz_levels.csv");
     if(pvz.closeProgram())
     {
         QMessageBox quit;
-        quit.setText("Error! “pvz_levels.csv” not found!!");
+        quit.setText("Error! “pvz_levels.csv” not found!!\nThe program will run with default settings.");
         quit.setStandardButtons(QMessageBox::Ok);
         quit.exec();
-        while(true)
-        {
-        QApplication::quit();
-        }
-
     }
-    ui->userButton->addItems(pvz.userSort());
+    else
+        pvz.setCurrentUser();
+    ui->levelDisplay->setNum(pvz.getCurrentLevel());
+    ui->levelDisplay->setAlignment(Qt::AlignCenter);
     ui->pointsDisplay->setText(QString::number(pvz.getSunPoints()));
     ui->pointsDisplay->setAlignment(Qt::AlignCenter);
+    ui->userButton->addItems(pvz.userSort());
+    scene = new QGraphicsScene(this);
+    ui->graphicsView->setScene(scene);
+    //QRectF rect(0,0,1000,1000);
+    //scene->setSceneRect(rect);
+    //scene->addPixmap(levelsPath.currentPath()+"/mainscreen.png");
+    scene->addPixmap(pvz.getMainScreen());
+
+    //scene->addEllipse(10,10,1000,100);
+
+//    QRectF rect(-100,-100,100,100);
+//    scene->setSceneRect(rect);
+//    QPen my_pen = QPen(Qt::blue);        // Draw lines with a red pen
+//    scene->addLine(QLineF(rect.bottomLeft(), rect.bottomRight()) ,my_pen);
+//    scene->addLine(QLineF(rect.topLeft(), rect.topRight()) ,my_pen);
+//    scene->addLine(QLineF(rect.bottomLeft(), rect.topLeft()) ,my_pen);
+//    scene->addLine(QLineF(rect.topRight(), rect.bottomRight()) ,my_pen);
 }
 
 void MainWindow::loadButtons()
 {
-    QSize plantIcon(50,80);
+    QSize plantIcon(50,50);
 
     QPixmap peashooterPath(levelsPath.currentPath()+"/icons/peashooter.png");
     QIcon peashooterIcon(peashooterPath);
@@ -81,7 +98,16 @@ void MainWindow::loadButtons()
     ui->plant8Button->setIcon(repeaterIcon);
     ui->plant8Button->setIconSize(plantIcon);
     ui->plant8Button->setToolTip("Repeater - Cost:200");
+
+    ui->levelDisplay->setToolTip("Current Level");
 }
+
+void MainWindow::quitProgram()
+{
+    QApplication::quit();
+    QApplication::quitOnLastWindowClosed();
+}
+
 
 MainWindow::~MainWindow()
 {
@@ -95,22 +121,47 @@ void MainWindow::on_newButton_clicked()
     {
     pvz.createUser(ui->nameDisplay->text());
     pvz.saveUsers(userPathName);
+    pvz.setCurrentUser();
     ui->userButton->clear();
     ui->userButton->addItems(pvz.userSort());
     ui->nameDisplay->clear();
+    ui->levelDisplay->setNum(pvz.getCurrentLevel());
     }
     else
-        ui->nameDisplay->setText("Please enter a name");
+        ui->nameDisplay->setPlaceholderText("Please enter a name");
 
 }
 
 void MainWindow::on_deleteButton_clicked()
 {
     //need to get current index;
-    //pvz.deleteUser();
+    int deleteIndex=pvz.getIndex();
+    pvz.deleteUser(deleteIndex);
+    pvz.saveUsers(userPathName);
+    pvz.setCurrentUser();
+    ui->userButton->clear();
+    ui->userButton->addItems(pvz.userSort());
+    ui->levelDisplay->setNum(pvz.getCurrentLevel());
+
 }
 
 void MainWindow::on_quitButton_clicked()
+{
+
+}
+
+
+
+void MainWindow::on_userButton_activated(const QString &arg1)
+{
+    pvz.updateCurrentUser(arg1);
+    ui->userButton->clear();
+    ui->userButton->addItems(pvz.userSort());
+    ui->nameDisplay->clear();
+    ui->levelDisplay->setNum(pvz.getCurrentLevel());
+}
+
+void MainWindow::on_startButton_clicked()
 {
 
 }

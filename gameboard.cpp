@@ -4,10 +4,9 @@ GameBoard::GameBoard()
 {
 }
 
-QString GameBoard::setMainScreen()
+QString GameBoard::getMainScreen()
 {
-    QString startScreen = "C:\\Qt\\Qt5.3.1\\Tools\\QtCreator\\bin\\pvz_bbaksh\\files\\startingscreen.png";
-    currentScreen= new QPixmap(startScreen);
+    QString mainscreen(homePath.currentPath()+"/mainscreen1.png");
+    return mainscreen;
 }
-
 

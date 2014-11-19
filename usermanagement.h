@@ -34,9 +34,13 @@ public:
     void createUser(QString name);
     void deleteUser(int index);
     void saveUsers(QString fileName);
+    void updateTimestamp(QString name);
     bool nameValidation(QString name);
     bool levelValidation(QString level);
     bool closeProgram();
+    double getIndex();
+    double getNameIndex(QString name);
+
 
     QStringList userSort();
 

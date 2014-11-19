@@ -21,12 +21,30 @@ void UserManagement::readUserData(QString fileName)
             {
                 userPlayer.append(values[1]);
             }
-            else userPlayer.append("");
+            else
+            {
+                userPlayer.append("");
+                players.remove();
+                userTimestamp.clear();
+                userPlayer.clear();
+                userLevel.clear();
+                saveUsers(fileName);
+                break;
+            }
             if(levelValidation(values[2]))
             {
                 userLevel.append(values[2]);
             }
-            else userLevel.append("");
+            else
+            {
+                    userPlayer.append("");
+                    players.remove();
+                    userTimestamp.clear();
+                    userPlayer.clear();
+                    userLevel.clear();
+                    saveUsers(fileName);
+                    break;
+                }
             data = reader.readLine();
         }
         players.close();
@@ -76,6 +94,7 @@ void UserManagement::createUser(QString name)
     }
     else userPlayer.append("");;
     userLevel.append("0");
+    userSort();
 
 }
 
@@ -100,6 +119,18 @@ void UserManagement::saveUsers(QString fileName)
         players.close();
     }
 
+}
+
+void UserManagement::updateTimestamp(QString name)
+{
+    QString time=QString::number(QDateTime::currentDateTime().toTime_t());
+    for(int i=0;i<userTimestamp.size();i++)
+    {
+        if(name==userPlayer[i])
+        {
+            userTimestamp[i]=time;
+        }
+    }
 }
 
 bool UserManagement::nameValidation(QString name)
@@ -141,27 +172,53 @@ bool UserManagement::levelValidation(QString level)
 
 bool UserManagement::closeProgram()
 {
- return close;
+    return close;
+}
+
+double UserManagement::getIndex()
+{
+    if(userTimestamp.size()>0)
+    {
+        double highest=0;
+        for(int i=0;i<userTimestamp.size();i++)
+        {
+            if(highest<userTimestamp[i].toDouble())
+                highest=userTimestamp[i].toDouble();
+        }
+        for(int i=0;i<userTimestamp.size();i++)
+        {
+            if(userTimestamp[i].toDouble()==highest)
+                return i;
+        }
+    }
+}
+
+double UserManagement::getNameIndex(QString name)
+{
+    for(int i=0;i<userPlayer.size();i++)
+    {
+        if(name==userPlayer[i])
+            return i;
+    }
 }
 
 QStringList UserManagement::userSort()
 {
-    bool sorted=false;
+    int totalSize=userPlayer.size();
     QStringList sortedTimes=userTimestamp;
     if(userPlayer.size()>0)
     {
-    while(sorted==false)
-    {
-        for(int i=0;i<userPlayer.size();i++)
+        sortedTimes.sort();
+        QStringList sortedNames;
+        for(int n=totalSize;n>0;n--)
         {
-            if(sortedTimes[i]<userPlayer[i])
+            for(int i=0;i<userPlayer.size();i++)
             {
-                sortedTimes[i]=userPlayer[i];
-                sorted=false;
+                if(sortedTimes[n-1]==userTimestamp[i])
+                    if(userPlayer[i]!="NULL")
+                        sortedNames.append(userPlayer[i]);
             }
-            else sorted=true;
         }
+        return sortedNames;
     }
-    }
-    return sortedTimes;
 }

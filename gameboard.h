@@ -4,14 +4,16 @@
 #include <QGraphicsView>
 #include <QGraphicsRectItem>
 #include <QPixmap>
+#include <QDir>
 
 class GameBoard: public GamePlay
 {
 private:
-    QPixmap *currentScreen;
+    QDir homePath;
+    QPixmap currentScreen;
 public:
     GameBoard();
-    QString setMainScreen();
+    QString getMainScreen();
 
 
 };

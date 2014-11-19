@@ -146,6 +146,11 @@
      </item>
      <item>
       <widget class="QLabel" name="levelDisplay">
+       <property name="font">
+        <font>
+         <pointsize>15</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -161,7 +166,7 @@
      <item>
       <widget class="QLineEdit" name="nameDisplay">
        <property name="text">
-        <string>Please enter a name</string>
+        <string/>
        </property>
       </widget>
      </item>
@@ -173,16 +178,6 @@
       </widget>
      </item>
     </layout>
-   </widget>
-   <widget class="QLineEdit" name="pointsDisplay">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>91</width>
-      <height>31</height>
-     </rect>
-    </property>
    </widget>
    <widget class="QLabel" name="userButtonLabel">
     <property name="geometry">
@@ -201,6 +196,32 @@
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="pointsDisplay">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>0</y>
+      <width>91</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="sunPointsLabel">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>20</y>
+      <width>51</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Sun Points</string>
     </property>
    </widget>
   </widget>

@@ -19,6 +19,7 @@ public:
     Ui::MainWindow *ui;
     explicit MainWindow(QWidget *parent = 0);
     void loadButtons();
+    void quitProgram();
     ~MainWindow();
 
 private slots:
@@ -29,6 +30,12 @@ private slots:
    void on_deleteButton_clicked();
 
    void on_quitButton_clicked();
+
+
+
+   void on_userButton_activated(const QString &arg1);
+
+   void on_startButton_clicked();
 
 private:
     QGraphicsScene *scene;
