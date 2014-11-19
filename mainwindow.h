@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 #include "UserManagement.h"
 #include "gameplay.h"
-#include "gameboard.h"
+#include "gamedisplay.h"
 #include <QMainWindow>
 #include <QDir>
 #include <iostream>
@@ -38,8 +38,8 @@ private slots:
    void on_startButton_clicked();
 
 private:
-    QGraphicsScene *scene;
-    GameBoard pvz;
+
+    GameDisplay pvz;
     QString userPathName;
     QDir playersPath;
     QDir levelsPath;

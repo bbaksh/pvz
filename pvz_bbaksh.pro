@@ -16,11 +16,11 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     usermanagement.cpp \
     gameplay.cpp \
-    gameboard.cpp
+    gamedisplay.cpp
 
 HEADERS  += mainwindow.h \
     usermanagement.h \
     gameplay.h \
-    gameboard.h
+    gamedisplay.h
 
 FORMS    += mainwindow.ui

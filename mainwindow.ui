@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1031</width>
-    <height>608</height>
+    <width>1023</width>
+    <height>604</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -118,13 +118,13 @@
      </item>
     </layout>
    </widget>
-   <widget class="QGraphicsView" name="graphicsView">
+   <widget class="GameDisplay" name="graphicsView">
     <property name="geometry">
      <rect>
       <x>120</x>
       <y>50</y>
-      <width>901</width>
-      <height>501</height>
+      <width>971</width>
+      <height>541</height>
      </rect>
     </property>
     <property name="autoFillBackground">
@@ -230,7 +230,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1031</width>
+     <width>1023</width>
      <height>21</height>
     </rect>
    </property>
@@ -246,6 +246,13 @@
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>GameDisplay</class>
+   <extends>QGraphicsView</extends>
+   <header location="global">gamedisplay.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
