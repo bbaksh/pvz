@@ -34,6 +34,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //scene->addPixmap(levelsPath.currentPath()+"/mainscreen.png");
     scene->addPixmap(pvz.getMainScreen());
 
+
     //scene->addEllipse(10,10,1000,100);
 
 //    QRectF rect(-100,-100,100,100);
@@ -163,5 +164,36 @@ void MainWindow::on_userButton_activated(const QString &arg1)
 
 void MainWindow::on_startButton_clicked()
 {
+    ui->startButton->hide();
+    scene->clear();
+    QPen grid = QPen(Qt::black);
+    QBrush dirt= QBrush(Qt::red);
+    //Create the HORIZONTAL GRID LINES
+    scene->addLine(QLineF(-50,-13,847,-13));//99.6 TRANSLATES 1 SQUARE DOWN (Y)
+    scene->addLine(QLineF(-50,86.6,847,86.6));
+    scene->addLine(QLineF(-50,186.2,847,186.2));
+    scene->addLine(QLineF(-50,285.8,847,285.8));
+    scene->addLine(QLineF(-50,385.4,847,385.4));
+    scene->addLine(QLineF(-50,485,847,485));
+
+    //Create the VERTICAL GRID LINES
+    scene->addLine(QLineF(-50,-13,-50,485));//89.7 TRANSLATES 1 SQUARE SIDEWAYS (X)
+    scene->addLine(QLineF(39.7,-13,39.7,485));
+    scene->addLine(QLineF(129.4,-13,129.4,485));
+    scene->addLine(QLineF(219.1,-13,219.1,485));
+    scene->addLine(QLineF(308.8,-13,308.8,485));
+    scene->addLine(QLineF(398.5,-13,398.5,485));
+    scene->addLine(QLineF(488.2,-13,488.2,485));
+    scene->addLine(QLineF(577.9,-13,577.9,485));
+    scene->addLine(QLineF(667.6,-13,667.6,485));
+    scene->addLine(QLineF(757.3,-13,757.3,485));
+    scene->addLine(QLineF(847,-13,847,485));
+    //set colors to the grid
+    scene->setBackgroundBrush(Qt::green);
+    scene->addRect(-50,-13,89.7,99.6,grid,dirt);
+    scene->addRect(-50,86.6,89.7,99.6,grid,dirt);
+    scene->addRect(-50,186.2,89.7,99.6,grid,dirt);
+    scene->addRect(-50,285.8,89.7,99.6,grid,dirt);
+    scene->addRect(-50,385.4,89.7,99.6,grid,dirt);
 
 }

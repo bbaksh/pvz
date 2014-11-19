@@ -56,5 +56,6 @@ public:
     //pvz.createUser("Brandon");
     //pvz.saveUsers(playersPath.currentPath()+"/pvz_players.csv");
 
+    GRID: TOP LEFT (-50,-13) BOTTOM RIGHT(847,485)
 
 */
