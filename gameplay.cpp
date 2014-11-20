@@ -54,6 +54,7 @@ void GamePlay::updateCurrentUser(QString name)
 
 int GamePlay::getCurrentLevel()
 {
+
     return currentUser[2].toInt();
 }
 
@@ -71,6 +72,7 @@ GamePlay::PeaShooter::PeaShooter()
       seeding=7.5;
       sun=0;
       need=0;
+      path="C://Qt/Qt5.3.1/Tools/QtCreator/bin/build-pvz_bbaksh-Desktop_Qt_5_3_MinGW_32bit-Debug/icons/peashooter.png";
 }
 
 

@@ -16,6 +16,7 @@ public:
     void updateCurrentUser(QString name);
     int getCurrentLevel();
     struct PeaShooter{
+    public:
       PeaShooter();
       int cost;
       int life;
@@ -28,6 +29,7 @@ public:
       double seeding;
       int sun;
       int need;
+      QString path;
     };
     struct SunFlower{
       SunFlower();

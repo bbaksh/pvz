@@ -55,6 +55,7 @@ void UserManagement::readUserData(QString fileName)
 
 void UserManagement::readLevelData(QString fileName)
 {
+    int n=0;
     QFile levels(fileName);
     if (levels.open(QIODevice::ReadOnly))
     {
@@ -65,17 +66,20 @@ void UserManagement::readLevelData(QString fileName)
         {
             values=data.split(":");
             levelLevel.append(values[0]);
-            QStringList sequenceValues;
+            QStringList sequenceValues;//used to append in for loop
             sequenceValues=values[1].split(",");
             for(int i=0;i<sequenceValues.size();i++)
             {
                 levelSequence.append(sequenceValues[i]);
             }
+            levelSequenceNumber.append(levelSequence);
+            levelSequence.clear();
             levelRows.append(values[2]);
             levelStart.append(values[3]);
             levelInterval.append(values[4]);
             levelDecrement.append(values[5]);
-            data = reader.readLine();
+             data = reader.readLine();
+            n++;
         }
         levels.close();
     }

@@ -6,6 +6,7 @@
 #include <QMainWindow>
 #include <QDir>
 #include <iostream>
+#include <QTimer>
 
 namespace Ui {
 class MainWindow;
@@ -37,12 +38,17 @@ private slots:
 
    void on_startButton_clicked();
 
+   void on_plant1Button_clicked();
+
+   void on_restartButton_clicked();
+
 private:
 
     GameDisplay pvz;
     QString userPathName;
     QDir playersPath;
     QDir levelsPath;
+    QTimer *timer;
 };
 
 #endif // MAINWINDOW_H

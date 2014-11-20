@@ -9,6 +9,7 @@
 #include <QApplication>
 #include <QMessageBox>
 #include <iostream>
+#include <QList>
 
 
 
@@ -21,6 +22,7 @@ protected:
     QStringList userLevel;
     QStringList levelLevel;
     QStringList levelSequence;
+    QList<QStringList> levelSequenceNumber;
     QStringList levelRows;
     QStringList levelStart;
     QStringList levelInterval;

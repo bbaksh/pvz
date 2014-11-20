@@ -168,10 +168,26 @@ void MainWindow::on_userButton_activated(const QString &arg1)
 void MainWindow::on_startButton_clicked()
 {
     //ui->startButton->hide();
+    //timer->start(20);
     pvz.scene->clear();
-    pvz.setLevel(pvz.getCurrentLevel());
+    pvz.setLevel(pvz.getRows(pvz.getCurrentLevel()));
+    //pvz.setLevel(pvz.getCurrentLevel());
     ui->graphicsView->adjustSize();
 
 
 
+}
+
+void MainWindow::on_plant1Button_clicked()
+{
+    pvz.setPlantType(1);
+}
+
+void MainWindow::on_restartButton_clicked()
+{
+    //timer->stop();
+    QMessageBox restart;
+    restart.setText("Are you sure you want to restart?");
+    restart.setStandardButtons(QMessageBox::Ok|QMessageBox::Cancel);
+    restart.exec();
 }
