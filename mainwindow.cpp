@@ -7,13 +7,14 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 
     ui->setupUi(this);
+    pvz=ui->graphicsView;
     loadButtons();
-
+    srand (time(NULL));
     ui->nameDisplay->setPlaceholderText("Please enter a name");
     userPathName=playersPath.currentPath()+"/pvz_players.csv";
-    pvz.readUserData(playersPath.currentPath()+"/pvz_players.csv");
-    pvz.readLevelData(levelsPath.currentPath()+"/pvz_levels.csv");
-    if(pvz.closeProgram())
+    pvz->readUserData(playersPath.currentPath()+"/pvz_players.csv");
+    pvz->readLevelData(levelsPath.currentPath()+"/pvz_levels.csv");
+    if(pvz->closeProgram())
     {
         QMessageBox quit;
         quit.setText("Error! “pvz_levels.csv” not found!!\nThe program will run with default settings.");
@@ -21,21 +22,31 @@ MainWindow::MainWindow(QWidget *parent) :
         quit.exec();
     }
     else
-        pvz.setCurrentUser();
-    ui->levelDisplay->setNum(pvz.getCurrentLevel());
+        pvz->setCurrentUser();
+    ui->levelDisplay->setNum(pvz->getCurrentLevel());
     ui->levelDisplay->setAlignment(Qt::AlignCenter);
-    ui->pointsDisplay->setText(QString::number(pvz.getSunPoints()));
+    ui->pointsDisplay->setText(QString::number(pvz->getSunPoints()));
     ui->pointsDisplay->setAlignment(Qt::AlignCenter);
-    ui->userButton->addItems(pvz.userSort());
-    pvz.scene = new QGraphicsScene(this);
-    ui->graphicsView->setScene(pvz.scene);
+    ui->userButton->addItems(pvz->userSort());
+    pvz->scene1 = new QGraphicsScene(this);
+    ui->graphicsView->setScene(pvz->scene1);
     ui->graphicsView->resize(900,500);
+
     //QRectF rect(0,0,800,500);//478
     //scene->setSceneRect(rect);
     //scene->addRect(0,0,100,100);
     //scene->addPixmap(levelsPath.currentPath()+"/mainscreen.png");
-    pvz.scene->addPixmap(pvz.mainScreen());
+    pvz->scene1->addPixmap(pvz->mainScreen());
     ui->graphicsView->adjustSize();
+    //this->connect(this,SIGNAL(mouseclick(QEvent*)),this,SLOT(handleclick(QEvent*)));
+    timer = new QTimer(this);
+    this->connect(timer, SIGNAL(timeout()), pvz, SLOT(dropSun()));
+    updateSuns = new QTimer(this);
+    this->connect(updateSuns,SIGNAL(timeout()),this,SLOT(updateSunLabel()));
+    pvz->sunflowerTimer = new QTimer(this);
+    this->connect(pvz->sunflowerTimer,SIGNAL(timeout()),pvz,SLOT(sunFlowerSun()));
+   // this->connect(&(this->pvz),SIGNAL(mouse()),this,SLOT(handleclick(QEvent*)));
+
 
 
     //scene->addEllipse(10,10,1000,100);
@@ -116,20 +127,26 @@ void MainWindow::quitProgram()
 MainWindow::~MainWindow()
 {
     delete ui;
-    pvz.saveUsers(userPathName);
+    pvz->saveUsers(userPathName);
 }
+
+//bool MainWindow::event(QEvent *mouse)
+//{
+//     if(mouse->type()==QEvent::MouseButtonPress)
+//         emit mouseclick(mouse);
+//}
 
 void MainWindow::on_newButton_clicked()
 {
     if(ui->nameDisplay->text()!=""&&ui->nameDisplay->text()!="Please enter a name")
     {
-    pvz.createUser(ui->nameDisplay->text());
-    pvz.saveUsers(userPathName);
-    pvz.setCurrentUser();
+    pvz->createUser(ui->nameDisplay->text());
+    pvz->saveUsers(userPathName);
+    pvz->setCurrentUser();
     ui->userButton->clear();
-    ui->userButton->addItems(pvz.userSort());
+    ui->userButton->addItems(pvz->userSort());
     ui->nameDisplay->clear();
-    ui->levelDisplay->setNum(pvz.getCurrentLevel());
+    ui->levelDisplay->setNum(pvz->getCurrentLevel());
     }
     else
         ui->nameDisplay->setPlaceholderText("Please enter a name");
@@ -139,55 +156,147 @@ void MainWindow::on_newButton_clicked()
 void MainWindow::on_deleteButton_clicked()
 {
     //need to get current index;
-    int deleteIndex=pvz.getIndex();
-    pvz.deleteUser(deleteIndex);
-    pvz.saveUsers(userPathName);
-    pvz.setCurrentUser();
+    int deleteIndex=pvz->getIndex();
+    pvz->deleteUser(deleteIndex);
+    pvz->saveUsers(userPathName);
+    pvz->setCurrentUser();
     ui->userButton->clear();
-    ui->userButton->addItems(pvz.userSort());
-    ui->levelDisplay->setNum(pvz.getCurrentLevel());
+    ui->userButton->addItems(pvz->userSort());
+    ui->levelDisplay->setNum(pvz->getCurrentLevel());
 
 }
 
 void MainWindow::on_quitButton_clicked()
 {
-
+    QMessageBox quit;
+    timer->stop();
+    quit.setFixedSize(QSize(900,300));
+    quit.setFixedSize(900,300);
+    //restart.setBaseSize(900,300);
+    quit.setText("Are you sure you want to quit?");
+    QAbstractButton *okayButton =quit.addButton(tr("OKAY"),QMessageBox::ActionRole);
+    QAbstractButton *cancelButton =quit.addButton(tr("CANCEL"),QMessageBox::ActionRole);
+    //quit.setStandardButtons(QMessageBox::Ok|QMessageBox::Cancel);
+    quit.exec();
+    if(quit.clickedButton() == okayButton)
+    {
+        pvz->scene1->clear();
+        pvz->scene1->addPixmap(pvz->mainScreen());
+        ui->graphicsView->adjustSize();
+    }
+    if(quit.clickedButton()==cancelButton)
+    {
+        //timer->start();
+        std::cout<<"test"<<std::endl;
+    }
 }
 
 
 
 void MainWindow::on_userButton_activated(const QString &arg1)
 {
-    pvz.updateCurrentUser(arg1);
+    pvz->updateCurrentUser(arg1);
     ui->userButton->clear();
-    ui->userButton->addItems(pvz.userSort());
+    ui->userButton->addItems(pvz->userSort());
     ui->nameDisplay->clear();
-    ui->levelDisplay->setNum(pvz.getCurrentLevel());
+    ui->levelDisplay->setNum(pvz->getCurrentLevel());
 }
 
 void MainWindow::on_startButton_clicked()
 {
     //ui->startButton->hide();
-    //timer->start(20);
-    pvz.scene->clear();
-    pvz.setLevel(pvz.getRows(pvz.getCurrentLevel()));
-    //pvz.setLevel(pvz.getCurrentLevel());
+    updateSuns->start(20);
+    timer->start(10000);//10000ms is 10 seconds
+    pvz->scene1->clear();
+    pvz->setLevel(pvz->getRows(pvz->getCurrentLevel()));
+    //pvz->setLevel(pvz->getCurrentLevel());
     ui->graphicsView->adjustSize();
+    QApplication::processEvents();
 
 
 
-}
-
-void MainWindow::on_plant1Button_clicked()
-{
-    pvz.setPlantType(1);
 }
 
 void MainWindow::on_restartButton_clicked()
 {
-    //timer->stop();
+    timer->stop();
     QMessageBox restart;
+
+    restart.setFixedSize(QSize(900,300));
+    restart.setFixedSize(900,300);
+    //restart.setBaseSize(900,300);
     restart.setText("Are you sure you want to restart?");
     restart.setStandardButtons(QMessageBox::Ok|QMessageBox::Cancel);
     restart.exec();
+    if(restart.button(QMessageBox::Ok))
+    {
+
+    }
+    if(restart.button(QMessageBox::Cancel))
+    {
+
+    }
+}
+
+void MainWindow::handleclick(QEvent *mouse)
+{
+
+    //emit pvz->handlemouse(mouse);
+}
+
+void MainWindow::updateSunLabel()
+{
+    ui->pointsDisplay->setText(QString::number(pvz->getSunPoints()));
+    ui->graphicsView->scene()->update();
+}
+
+void MainWindow::on_plant1Button_clicked()
+{
+    if(pvz->getSunPoints()>=100)
+    {
+    pvz->setPlantType(1);
+    }
+
+}
+
+void MainWindow::on_plant2Button_clicked()
+{
+    if(pvz->getSunPoints()>=50)
+    pvz->setPlantType(2);
+}
+
+void MainWindow::on_plant3Button_clicked()
+{
+    if(pvz->getSunPoints()>=150)
+    pvz->setPlantType(3);
+}
+
+void MainWindow::on_plant4Button_clicked()
+{
+    if(pvz->getSunPoints()>=50)
+    pvz->setPlantType(4);
+}
+
+void MainWindow::on_plant5Button_clicked()
+{
+    if(pvz->getSunPoints()>=25)
+    pvz->setPlantType(5);
+}
+
+void MainWindow::on_plant6Button_clicked()
+{
+    if(pvz->getSunPoints()>=175)
+    pvz->setPlantType(6);
+}
+
+void MainWindow::on_plant7Button_clicked()
+{
+    if(pvz->getSunPoints()>=150)
+    pvz->setPlantType(7);
+}
+
+void MainWindow::on_plant8Button_clicked()
+{
+    if(pvz->getSunPoints()>=200)
+    pvz->setPlantType(8);
 }

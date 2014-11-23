@@ -97,7 +97,7 @@ void UserManagement::createUser(QString name)
         userPlayer.append(name);
     }
     else userPlayer.append("");;
-    userLevel.append("0");
+    userLevel.append("1");
     userSort();
 
 }

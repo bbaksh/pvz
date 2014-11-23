@@ -5,34 +5,58 @@
 #include <QGraphicsView>
 #include <QDir>
 #include <QGraphicsItem>
+#include <QMouseEvent>
+#include <plants.h>
+#include <zombies.h>
+#include <vector>
+#include <sun.h>
+#include <QGraphicsScene>
+#include <QTimer>
+
 
 class GameDisplay : public QGraphicsView, public GamePlay
 {
     Q_OBJECT
 private:
     QDir homePath;
-protected:
+    int plantType;
+
     QPointF click;
     double xCoord;
     double yCoord;
-    double plantType;
+
+    Plants *p;
+    Zombies *z;
+    Sun *s;
+    std::vector<Plants *>plantVector;
+    std::vector<Zombies *>zombieVector;
+    std::vector<Sun *>sunVector;
 
 public:
     explicit GameDisplay(QWidget *parent = 0);
-    QGraphicsScene *scene;
+    QGraphicsScene *scene1;
+    QEvent *event;
+    QMouseEvent *mouseEvent;
     QString mainScreen();
     void setPlant(int i);
-    void setPlantType(int i);
-    double getPlantType();
+    void setPlantType(const int i);
+    int getPlantType();
     int getRows(int i);
     void setLevel(int i);
+    bool cellEmpty();
+    QTimer *sunflowerTimer;
+
 
 
 
 signals:
-
+    void mouse();
+    void sunFlowerPlanted();
 public slots:
     void mousePressEvent(QMouseEvent *click);
+  //  void handlemouse(QEvent *mouse=0);
+    void dropSun();
+    void sunFlowerSun();
 
 };
 

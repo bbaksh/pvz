@@ -7,6 +7,7 @@
 #include <QDir>
 #include <iostream>
 #include <QTimer>
+#include <time.h>
 
 namespace Ui {
 class MainWindow;
@@ -22,6 +23,8 @@ public:
     void loadButtons();
     void quitProgram();
     ~MainWindow();
+protected:
+//    bool event(QEvent *mouse);
 
 private slots:
 
@@ -42,13 +45,36 @@ private slots:
 
    void on_restartButton_clicked();
 
+   void handleclick(QEvent *);
+
+   void updateSunLabel();
+   void on_plant2Button_clicked();
+
+   void on_plant3Button_clicked();
+
+   void on_plant4Button_clicked();
+
+   void on_plant5Button_clicked();
+
+   void on_plant6Button_clicked();
+
+   void on_plant7Button_clicked();
+
+   void on_plant8Button_clicked();
+
 private:
 
-    GameDisplay pvz;
+    GameDisplay *pvz;//accesser to ui element graphicsview
     QString userPathName;
     QDir playersPath;
     QDir levelsPath;
     QTimer *timer;
+    QTimer *updateSuns;
+    QGraphicsPixmapItem *picture;
+signals:
+    void mouseclick(QEvent *);
+
 };
+
 
 #endif // MAINWINDOW_H

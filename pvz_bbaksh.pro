@@ -16,11 +16,17 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     usermanagement.cpp \
     gameplay.cpp \
-    gamedisplay.cpp
+    gamedisplay.cpp \
+    plants.cpp \
+    zombies.cpp \
+    sun.cpp
 
 HEADERS  += mainwindow.h \
     usermanagement.h \
     gameplay.h \
-    gamedisplay.h
+    gamedisplay.h \
+    plants.h \
+    zombies.h \
+    sun.h
 
 FORMS    += mainwindow.ui

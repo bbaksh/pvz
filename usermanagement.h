@@ -10,6 +10,7 @@
 #include <QMessageBox>
 #include <iostream>
 #include <QList>
+#include <QGraphicsItem>
 
 
 
@@ -60,4 +61,337 @@ public:
 
     GRID: TOP LEFT (-50,-13) BOTTOM RIGHT(847,485)
 
+
+//    struct PeaShooter{
+//    public:
+//      PeaShooter();
+//      int cost;
+//      int life;
+//      int range;
+//      int damage;
+//      double rate;
+//      int splash;
+//      int slow;
+//      int bomb;
+//      double seeding;
+//      int sun;
+//      int need;
+//      QString path;
+//    };
+//    struct SunFlower{
+//      SunFlower();
+//      int cost;
+//      int life;
+//      int range;
+//      int damage;
+//      double rate;
+//      int splash;
+//      int slow;
+//      int bomb;
+//      double seeding;
+//      int sun;
+//      int need;
+//    };
+//    struct CherryBomb{
+//      CherryBomb();
+//      int cost;
+//      int life;
+//      int range;
+//      int damage;
+//      double rate;
+//      int splash;
+//      int slow;
+//      int bomb;
+//      double seeding;
+//      int sun;
+//      int need;
+//    };
+//    struct WallNut{
+//      WallNut();
+//      int cost;
+//      int life;
+//      int range;
+//      int damage;
+//      double rate;
+//      int splash;
+//      int slow;
+//      int bomb;
+//      double seeding;
+//      int sun;
+//      int need;
+//    };
+//    struct PatatoMine{
+//      PatatoMine();
+//      int cost;
+//      int life;
+//      int range;
+//      int damage;
+//      double rate;
+//      int splash;
+//      int slow;
+//      int bomb;
+//      double seeding;
+//      int sun;
+//      int need;
+//    };
+//    struct SnowPea{
+//      SnowPea();
+//      int cost;
+//      int life;
+//      int range;
+//      int damage;
+//      double rate;
+//      int splash;
+//      int slow;
+//      int bomb;
+//      double seeding;
+//      int sun;
+//      int need;
+//    };
+//    struct Chomper{
+//      Chomper();
+//      int cost;
+//      int life;
+//      int range;
+//      int damage;
+//      double rate;
+//      int splash;
+//      int slow;
+//      int bomb;
+//      double seeding;
+//      int sun;
+//      int need;
+//    };
+//    struct Repeater{
+//      Repeater();
+//      int cost;
+//      int life;
+//      int range;
+//      int damage;
+//      double rate;
+//      int splash;
+//      int slow;
+//      int bomb;
+//      double seeding;
+//      int sun;
+//      int need;
+//    };
+//    struct Regular{
+//        Regular();
+//        int life;
+//        int equipment;
+//        int attack;
+//        double rate;
+//        double speed;
+//    };
+//    struct Flag{
+//        Flag();
+//        int life;
+//        int equipment;
+//        int attack;
+//        double rate;
+//        double speed;
+//    };
+//    struct Conehead{
+//        Conehead();
+//        int life;
+//        int equipment;
+//        int attack;
+//        double rate;
+//        double speed;
+//    };
+//    struct Buckethead{
+//        Buckethead();
+//        int life;
+//        int equipment;
+//        int attack;
+//        double rate;
+//        double speed;
+//    };
+//    struct Newspaper{
+//        Newspaper();
+//        int life;
+//        int equipment;
+//        int attack;
+//        double rate;
+//        double speed;
+//    };
+//GamePlay::PeaShooter::PeaShooter()
+//{
+//      cost=100;
+//      life=4;
+//      range=9999;
+//      damage=1;
+//      rate=1.5;
+//      splash=0;
+//      slow=0;
+//      bomb=0;
+//      seeding=7.5;
+//      sun=0;
+//      need=0;
+//      path="C://Qt/Qt5.3.1/Tools/QtCreator/bin/build-pvz_bbaksh-Desktop_Qt_5_3_MinGW_32bit-Debug/icons/peashooter.png";
+//}
+
+
+//GamePlay::SunFlower::SunFlower()
+//{
+//    cost=50;
+//    life=4;
+//    range=0;
+//    damage=0;
+//    rate=24;
+//    splash=0;
+//    slow=0;
+//    bomb=0;
+//    seeding=7.5;
+//    sun=1;
+//    need=0;
+//}
+
+
+//GamePlay::CherryBomb::CherryBomb()
+//{
+//    cost=150;
+//    life=9999;
+//    range=1;
+//    damage=90;
+//    rate=1;
+//    splash=3;
+//    slow=0;
+//    bomb=1;
+//    seeding=50;
+//    sun=0;
+//    need=0;
+//}
+
+
+//GamePlay::WallNut::WallNut()
+//{
+//    cost=50;
+//    life=72;
+//    range=0;
+//    damage=0;
+//    rate=0;
+//    splash=0;
+//    slow=0;
+//    bomb=0;
+//    seeding=30;
+//    sun=0;
+//    need=0;
+//}
+
+
+//GamePlay::PatatoMine::PatatoMine()
+//{
+//    cost=25;
+//    life=4;
+//    range=1;
+//    damage=90;
+//    rate=15;
+//    splash=0;
+//    slow=0;
+//    bomb=1;
+//    seeding=30;
+//    sun=0;
+//    need=0;
+//}
+
+
+//GamePlay::SnowPea::SnowPea()
+//{
+//    cost=175;
+//    life=4;
+//    range=9999;
+//    damage=1;
+//    rate=1.5;
+//    splash=0;
+//    slow=1;
+//    bomb=0;
+//    seeding=7.5;
+//    sun=0;
+//    need=0;
+//}
+
+
+//GamePlay::Chomper::Chomper()
+//{
+//    cost=150;
+//    life=4;
+//    range=1;
+//    damage=150;
+//    rate=42;
+//    splash=0;
+//    slow=0;
+//    bomb=0;
+//    seeding=7.5;
+//    sun=0;
+//    need=0;
+//}
+
+
+//GamePlay::Repeater::Repeater()
+//{
+//    cost=200;
+//    life=4;
+//    range=9999;
+//    damage=2;
+//    rate=1.5;
+//    splash=0;
+//    slow=0;
+//    bomb=0;
+//    seeding=7.5;
+//    sun=0;
+//    need=1;
+//}
+
+
+//GamePlay::Regular::Regular()
+//{
+//    life=10;
+//    equipment=0;
+//    attack=1;
+//    rate=0.5;
+//    speed=5;
+
+//}
+
+
+//GamePlay::Flag::Flag()
+//{
+//    life=10;
+//    equipment=0;
+//    attack=1;
+//    rate=0.5;
+//    speed=3.75;
+//}
+
+
+//GamePlay::Conehead::Conehead()
+//{
+//    life=10;
+//    equipment=18;
+//    attack=1;
+//    rate=0.5;
+//    speed=5;
+//}
+
+
+//GamePlay::Buckethead::Buckethead()
+//{
+//    life=10;
+//    equipment=55;
+//    attack=1;
+//    rate=0.5;
+//    speed=5;
+//}
+
+
+//GamePlay::Newspaper::Newspaper()
+//{
+//    life=8;
+//    equipment=8;
+//    attack=1;
+//    rate=0.5;
+//    speed=5;
+}
 */
