@@ -12,6 +12,7 @@
 #include <sun.h>
 #include <QGraphicsScene>
 #include <QTimer>
+#include <iostream>
 
 
 class GameDisplay : public QGraphicsView, public GamePlay
@@ -31,6 +32,7 @@ private:
     std::vector<Plants *>plantVector;
     std::vector<Zombies *>zombieVector;
     std::vector<Sun *>sunVector;
+    std::vector<QTimer *>sunFlowerTimer;
 
 public:
     explicit GameDisplay(QWidget *parent = 0);
@@ -57,6 +59,8 @@ public slots:
   //  void handlemouse(QEvent *mouse=0);
     void dropSun();
     void sunFlowerSun();
+    void spawnZombies();
+    void moveZombies();
 
 };
 

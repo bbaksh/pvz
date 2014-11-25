@@ -17,6 +17,8 @@ public:
     Sun(int x, int y,QString path);
     int getX();
     int getY();
+    void setClicked();
+
     void advance(int phase);
     bool areaX(int x);
     bool areaY(int y);

@@ -1,6 +1,6 @@
 #ifndef PLANTS_H
 #define PLANTS_H
-
+#include <QGraphicsItem>
 #include <QGraphicsPixmapItem>
 
 class Plants : public QGraphicsPixmapItem

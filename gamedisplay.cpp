@@ -203,8 +203,9 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
 
             }
         }
-        //sunflowerTimer = new QTimer(this);
+        sunflowerTimer = new QTimer(this);
         sunflowerTimer->start(7500);
+        this->connect(this->sunflowerTimer,SIGNAL(timeout()),this,SLOT(sunFlowerSun()));
         break;
     }
         case 3:
@@ -340,9 +341,10 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
         //if(sunVector[i]->getX()+n==click->x()&&sunVector[i]->getY()+n==click->y())
         if(sunVector[i]->areaX(click->x())&&sunVector[i]->areaY(click->y()))
         {
+            sunVector[i]->setClicked();
             scene()->removeItem(sunVector[i]);
             addSunPoints(25);
-            break;
+           // break;
         }
     }
 }
@@ -366,16 +368,54 @@ void GameDisplay::dropSun()
 
 void GameDisplay::sunFlowerSun()
 {
-    for(int i=0;plantVector.size();i++)
+    for(int i=0;i<plantVector.size();i++)
     {
         if(plantVector[i]->getType()==2)
         {
             s = new Sun(plantVector[i]->getX(),plantVector[i]->getY(),homePath.currentPath()+"/icons/sun.png");
             sunVector.push_back(s);
             scene()->addItem(s);
-            break;
         }
     }
+}
+
+void GameDisplay::spawnZombies()
+{
+    if(getCurrentLevel()==1)
+    {
+    z = new Zombies(1,900,200);
+    zombieVector.push_back(z);
+    scene()->addItem(z);
+    }
+    if(getCurrentLevel()==2)
+    {
+        int randomRow;
+        randomRow=rand()%3+1;
+        z = new Zombies(1,900,100*randomRow);
+        zombieVector.push_back(z);
+        scene()->addItem(z);
+    }
+    if(getCurrentLevel()>2)
+    {
+        int randomRow;
+        randomRow=rand()%5;
+        z = new Zombies(1,900,100*randomRow);
+        zombieVector.push_back(z);
+        scene()->addItem(z);
+    }
+
+
+}
+
+void GameDisplay::moveZombies()
+{
+    for(int i=0;i<zombieVector.size();i++)
+    {
+        zombieVector[i]->slideZombie();
+        scene()->update();
+
+    }
+
 }
 //void GameDisplay::handlemouse(QEvent *mouse)
 //{

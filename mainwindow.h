@@ -70,6 +70,8 @@ private:
     QDir levelsPath;
     QTimer *timer;
     QTimer *updateSuns;
+    QTimer *zombieTimer;
+    QTimer *animateZombie;
     QGraphicsPixmapItem *picture;
 signals:
     void mouseclick(QEvent *);

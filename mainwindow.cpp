@@ -44,7 +44,11 @@ MainWindow::MainWindow(QWidget *parent) :
     updateSuns = new QTimer(this);
     this->connect(updateSuns,SIGNAL(timeout()),this,SLOT(updateSunLabel()));
     pvz->sunflowerTimer = new QTimer(this);
-    this->connect(pvz->sunflowerTimer,SIGNAL(timeout()),pvz,SLOT(sunFlowerSun()));
+    zombieTimer = new QTimer(this);
+    this->connect(zombieTimer,SIGNAL(timeout()),pvz,SLOT(spawnZombies()));
+    animateZombie = new QTimer(this);
+    this->connect(animateZombie,SIGNAL(timeout()),pvz,SLOT(moveZombies()));
+   //this->connect(pvz->sunflowerTimer,SIGNAL(timeout()),pvz,SLOT(sunFlowerSun()));
    // this->connect(&(this->pvz),SIGNAL(mouse()),this,SLOT(handleclick(QEvent*)));
 
 
@@ -207,6 +211,8 @@ void MainWindow::on_startButton_clicked()
     //ui->startButton->hide();
     updateSuns->start(20);
     timer->start(10000);//10000ms is 10 seconds
+    zombieTimer->start(5000);
+    animateZombie->start(25);
     pvz->scene1->clear();
     pvz->setLevel(pvz->getRows(pvz->getCurrentLevel()));
     //pvz->setLevel(pvz->getCurrentLevel());

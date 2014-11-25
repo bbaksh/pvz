@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     gamedisplay.cpp \
     plants.cpp \
     zombies.cpp \
-    sun.cpp
+    sun.cpp \
+    bullets.cpp
 
 HEADERS  += mainwindow.h \
     usermanagement.h \
@@ -27,6 +28,7 @@ HEADERS  += mainwindow.h \
     gamedisplay.h \
     plants.h \
     zombies.h \
-    sun.h
+    sun.h \
+    bullets.h
 
 FORMS    += mainwindow.ui

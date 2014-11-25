@@ -22,6 +22,12 @@ int Sun::getY()
     return yPos;
 }
 
+void Sun::setClicked()
+{
+    xPos=-1;
+    yPos=-1;
+}
+
 void Sun::advance(int phase)
 {
     std::cout<<"hi"<<std::endl;
