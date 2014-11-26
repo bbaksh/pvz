@@ -32,6 +32,7 @@ Zombies::Zombies(int type,int xPos,int yPos)
         attack=1;
         rate=0.5;
         speed=3.75;
+        zombiePicture=file.currentPath()+"/icons/zombie2.png";
     }
     if(this->type==3)
     {
@@ -40,6 +41,7 @@ Zombies::Zombies(int type,int xPos,int yPos)
         attack=1;
         rate=0.5;
         speed=5;
+        zombiePicture=file.currentPath()+"/icons/zombie3.png";
     }
     if(this->type==4)
     {
@@ -48,6 +50,7 @@ Zombies::Zombies(int type,int xPos,int yPos)
         attack=1;
         rate=0.5;
         speed=5;
+        zombiePicture=file.currentPath()+"/icons/zombie1.png";
     }
     if(this->type==5)
     {
@@ -56,6 +59,7 @@ Zombies::Zombies(int type,int xPos,int yPos)
         attack=1;
         rate=0.5;
         speed=5;
+        zombiePicture=file.currentPath()+"/icons/zombie1.png";
     }
 
 }

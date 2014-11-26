@@ -47,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent) :
     zombieTimer = new QTimer(this);
     this->connect(zombieTimer,SIGNAL(timeout()),pvz,SLOT(spawnZombies()));
     animateZombie = new QTimer(this);
-    this->connect(animateZombie,SIGNAL(timeout()),pvz,SLOT(moveZombies()));
+    this->connect(animateZombie,SIGNAL(timeout()),pvz,SLOT(moveZombiesAndPlants()));
    //this->connect(pvz->sunflowerTimer,SIGNAL(timeout()),pvz,SLOT(sunFlowerSun()));
    // this->connect(&(this->pvz),SIGNAL(mouse()),this,SLOT(handleclick(QEvent*)));
 

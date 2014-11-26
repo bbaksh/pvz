@@ -14,6 +14,7 @@ private:
     int randomY;
     QPixmap sunPicture;
     int type;
+    int index;
 public:
     Sun();
     Sun(int x, int y,QString path,int type);

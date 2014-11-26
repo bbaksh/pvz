@@ -21,10 +21,13 @@ class GameDisplay : public QGraphicsView, public GamePlay
 private:
     QDir homePath;
     int plantType;
-
+    bool grid[5][10];
     QPointF click;
     double xCoord;
     double yCoord;
+    int sunFlowerIndex;
+    int zombieIndex;
+    bool zombiesFinished;
 
     Plants *p;
     Zombies *z;
@@ -40,12 +43,13 @@ public:
     QEvent *event;
     QMouseEvent *mouseEvent;
     QString mainScreen();
+    void setGridFromLevel();
     void setPlant(int i);
     void setPlantType(const int i);
     int getPlantType();
     int getRows(int i);
     void setLevel(int i);
-    bool cellEmpty();
+    bool cellEmpty(int x, int y);
     QTimer *sunflowerTimer;
 
 
@@ -60,7 +64,7 @@ public slots:
     void dropSun();
     void sunFlowerSun();
     void spawnZombies();
-    void moveZombies();
+    void moveZombiesAndPlants();
 
 };
 

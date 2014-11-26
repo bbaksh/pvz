@@ -13,6 +13,10 @@ GameDisplay::GameDisplay(QWidget *parent) :
     plantType=0;
     event=0;
     mouseEvent=0;
+    sunFlowerIndex=0;
+    zombieIndex=0;
+    zombiesFinished=true;
+
 }
 
 
@@ -20,6 +24,44 @@ QString GameDisplay::mainScreen()
 {
     QString screen(homePath.currentPath()+"/mainscreen3.png");
     return screen;
+}
+
+void GameDisplay::setGridFromLevel()
+{
+    for(int i=0;i<5;i++)
+    {
+        for(int n=0;n<10;n++)
+        {
+            grid[i][n]=false;
+        }
+    }
+    if(getCurrentLevel()==1)
+    {
+        for(int i=1;i<10;i++)
+        {
+            grid[2][i]=true;
+        }
+    }
+    if(getCurrentLevel()==2)
+    {
+        for(int i=1;i<4;i++)
+        {
+            for(int n=1;n<10;n++)
+            {
+                grid[i][n]=true;
+            }
+        }
+    }
+    if(getCurrentLevel()>2)
+    {
+        for(int i=0;i<5;i++)
+        {
+            for(int n=1;n<10;n++)
+            {
+                grid[i][n]=true;
+            }
+        }
+    }
 }
 
 void GameDisplay::setPlant(int i)
@@ -143,11 +185,12 @@ void GameDisplay::setLevel(int i)
        }
        break;
    }
+   setGridFromLevel();
 }
 
-bool GameDisplay::cellEmpty()
+bool GameDisplay::cellEmpty(int x, int y)
 {
-    return true;
+    return grid[y/100][x/90];
 }
 
 void GameDisplay::mousePressEvent(QMouseEvent *click)
@@ -157,7 +200,7 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
 //    if(mouseEvent!=0)
         emit mouse();
     qDebug() << click->pos();
-    if(cellEmpty())
+    if(cellEmpty(click->x(),click->y()))
     {
         switch(plantType)
         {
@@ -181,6 +224,7 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
 
             }
         }
+        grid[click->y()/100][click->x()/90]=false;
         break;
     }
         case 2:
@@ -206,6 +250,7 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
         sunflowerTimer = new QTimer(this);
         sunflowerTimer->start(7500);
         this->connect(this->sunflowerTimer,SIGNAL(timeout()),this,SLOT(sunFlowerSun()));
+        grid[click->y()/100][click->x()/90]=false;
         break;
     }
         case 3:
@@ -227,6 +272,7 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
 
             }
         }
+        grid[click->y()/100][click->x()/90]=false;
         break;
     }
         case 4:
@@ -248,6 +294,7 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
 
             }
         }
+        grid[click->y()/100][click->x()/90]=false;
         break;
     }
         case 5:
@@ -269,6 +316,7 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
 
             }
         }
+        grid[click->y()/100][click->x()/90]=false;
         break;
     }
         case 6:
@@ -290,6 +338,7 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
 
             }
         }
+        grid[click->y()/100][click->x()/90]=false;
         break;
     }
         case 7:
@@ -311,6 +360,7 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
 
                 }
             }
+            grid[click->y()/100][click->x()/90]=false;
             break;
         }
         case 8:
@@ -332,6 +382,7 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
 
                 }
             }
+            grid[click->y()/100][click->x()/90]=false;
             break;
         }
         }
@@ -381,33 +432,43 @@ void GameDisplay::sunFlowerSun()
 
 void GameDisplay::spawnZombies()
 {
-    if(getCurrentLevel()==1)
+    if(zombiesFinished)
     {
-    z = new Zombies(1,900,200);
-    zombieVector.push_back(z);
-    scene()->addItem(z);
+        if(getCurrentLevel()==1)
+        {
+                z = new Zombies(levelSequenceNumber[getCurrentLevel()-1].at(zombieIndex).toInt(),900,200);
+                zombieVector.push_back(z);
+                scene()->addItem(z);
+        }
+        if(getCurrentLevel()==2)
+        {
+                int randomRow;
+                randomRow=rand()%3+1;
+                z = new Zombies(levelSequenceNumber[getCurrentLevel()-1].at(zombieIndex).toInt(),900,100*randomRow);
+                zombieVector.push_back(z);
+                scene()->addItem(z);
+        }
+        if(getCurrentLevel()>2)
+        {
+    //        for(int i=0;i<levelSequenceNumber[getCurrentLevel()].size();i++)
+    //        {
+                int randomRow;
+                randomRow=rand()%5;
+                z = new Zombies(levelSequenceNumber[getCurrentLevel()-1].at(zombieIndex).toInt(),900,100*randomRow);
+                zombieVector.push_back(z);
+                scene()->addItem(z);
+    //        }
+        }
     }
-    if(getCurrentLevel()==2)
+    if(zombieIndex!=levelSequenceNumber[getCurrentLevel()-1].size()-1)
     {
-        int randomRow;
-        randomRow=rand()%3+1;
-        z = new Zombies(1,900,100*randomRow);
-        zombieVector.push_back(z);
-        scene()->addItem(z);
+        zombieIndex++;
     }
-    if(getCurrentLevel()>2)
-    {
-        int randomRow;
-        randomRow=rand()%5;
-        z = new Zombies(1,900,100*randomRow);
-        zombieVector.push_back(z);
-        scene()->addItem(z);
-    }
-
-
+    else
+        zombiesFinished=false;
 }
 
-void GameDisplay::moveZombies()
+void GameDisplay::moveZombiesAndPlants()
 {
     for(int i=0;i<zombieVector.size();i++)
     {

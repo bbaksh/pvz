@@ -23,6 +23,7 @@ Sun::Sun(int x, int y,QString path,int type)
         sunPicture=path;
         this->type=type;
     }
+    this->index=index;
 }
 
 int Sun::getX()
