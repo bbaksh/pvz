@@ -359,7 +359,7 @@ void GameDisplay::dropSun()
         xCoord=rand()%900;
         yCoord=rand()%500;
     }
-    s = new Sun(xCoord,yCoord,homePath.currentPath()+"/icons/sun.png");
+    s = new Sun(xCoord,yCoord,homePath.currentPath()+"/icons/sun.png",1);
     sunVector.push_back(s);
    // scene()->addPixmap(s->getPicture())->setPos(xCoord,yCoord);
    // scene()->addRect(s->boundingRect(),QPen(Qt::black),QBrush(s->getPicture()))->setPos(xCoord,yCoord);
@@ -372,7 +372,7 @@ void GameDisplay::sunFlowerSun()
     {
         if(plantVector[i]->getType()==2)
         {
-            s = new Sun(plantVector[i]->getX(),plantVector[i]->getY(),homePath.currentPath()+"/icons/sun.png");
+            s = new Sun(plantVector[i]->getX(),plantVector[i]->getY(),homePath.currentPath()+"/icons/sun.png",2);
             sunVector.push_back(s);
             scene()->addItem(s);
         }
@@ -414,6 +414,14 @@ void GameDisplay::moveZombies()
         zombieVector[i]->slideZombie();
         scene()->update();
 
+    }
+    for(int i=0;i<sunVector.size();i++)
+    {
+        if(sunVector[i]->getType()==1)
+        {
+        sunVector[i]->slideSun();
+        scene()->update();
+        }
     }
 
 }

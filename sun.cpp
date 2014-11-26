@@ -5,11 +5,24 @@ Sun::Sun()
 
 }
 
-Sun::Sun(int x, int y,QString path)
+Sun::Sun(int x, int y,QString path,int type)
 {
+    if(type==1)
+    {
     xPos=x;
-    yPos=y;
+    yPos=0;
+    randomY=y;
     sunPicture=path;
+    this->type=type;
+    }
+    else
+    {
+        xPos=x;
+        yPos=y;
+        randomY=0;
+        sunPicture=path;
+        this->type=type;
+    }
 }
 
 int Sun::getX()
@@ -22,10 +35,23 @@ int Sun::getY()
     return yPos;
 }
 
+int Sun::getType()
+{
+    return type;
+}
+
 void Sun::setClicked()
 {
     xPos=-1;
     yPos=-1;
+}
+
+void Sun::slideSun()
+{
+    if(yPos!=randomY)
+    {
+    yPos++;
+    }
 }
 
 void Sun::advance(int phase)
