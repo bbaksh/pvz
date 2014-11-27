@@ -21,6 +21,8 @@ Plants::Plants()
 
 Plants::Plants(int type, int xPos, int yPos)
 {
+    sunTimer=1;
+    plantSun=false;
     dead=false;
     if(type==1)
     {
@@ -57,6 +59,7 @@ Plants::Plants(int type, int xPos, int yPos)
         seeding=7.5;
         sun=1;
         need=0;
+        plantSun=true;
     }
     if(type==3)
     {
@@ -96,7 +99,7 @@ Plants::Plants(int type, int xPos, int yPos)
     }
     if(type==5)
     {
-        plantPicture=file.currentPath()+"/icons/patatomine1.png";
+        plantPicture=file.currentPath()+"/icons/potatomine1.png";
         this->type=type;
         this->xPos=xPos;
         this->yPos=yPos;
@@ -197,7 +200,7 @@ int Plants::getY()
     return yPos;
 }
 
-int Plants::getType()
+int Plants::getType() const
 {
     return type;
 }
@@ -205,6 +208,16 @@ int Plants::getType()
 bool Plants::getStatus()
 {
     return dead;
+}
+
+bool Plants::okayToPlant()
+{
+    if(sunTimer%75==0)
+        plantSun=true;
+    else
+        plantSun=false;
+    sunTimer++;
+    return plantSun;
 }
 
 void Plants::setStatus(bool status)

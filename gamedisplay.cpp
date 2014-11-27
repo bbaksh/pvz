@@ -18,7 +18,9 @@ GameDisplay::GameDisplay(QWidget *parent) :
     zombiesFinished=true;
     zombieAttackDelay=0;
     connect(this,SIGNAL(zombieAttack(Zombies*,Plants*)),this,SLOT(zombieHitPlant(Zombies*,Plants*)));
-
+    sunflowerTimer = new QTimer(this);
+    sunflowerTimer->start(100);
+    this->connect(this->sunflowerTimer,SIGNAL(timeout()),this,SLOT(sunFlowerSun()));
 }
 
 
@@ -66,10 +68,6 @@ void GameDisplay::setGridFromLevel()
     }
 }
 
-void GameDisplay::setPlant(int i)
-{
-    scene1->addRect(100,90,100,100);
-}
 
 void GameDisplay::setPlantType(const int i)
 {
@@ -91,6 +89,7 @@ int GameDisplay::getRows(int i)
         if(i==levelLevel[n].toInt())
             return levelRows[n].toInt();
     }
+    return 0;
 }
 
 void GameDisplay::setLevel(int i)
@@ -99,10 +98,6 @@ void GameDisplay::setLevel(int i)
     QBrush dirt(QColor(102,51,0));
     QBrush grass(QColor(0,153,0));
     QBrush lawnmower(QColor(160,160,160));
-//    if(i==0)
-//        i++;
-//    if(i>2)
-//        i=3;
     for(int row=0;row<500;row+=100)
     {
         scene1->addRect(0,row,90,100,grid,lawnmower);
@@ -213,12 +208,11 @@ void GameDisplay::zombieHitPlant(Zombies *zombie, Plants *plant)
     zombieAttackDelay++;
 }
 
+
 void GameDisplay::mousePressEvent(QMouseEvent *click)
 {
     std::cout<<plantType<<std::endl;
-   // mouseEvent=click;
-//    if(mouseEvent!=0)
-        emit mouse();
+    emit mouse();
     qDebug() << click->pos();
     if(cellEmpty(click->x(),click->y()))
     {
@@ -263,9 +257,6 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
 
             }
         }
-        sunflowerTimer = new QTimer(this);
-        sunflowerTimer->start(7500);
-        this->connect(this->sunflowerTimer,SIGNAL(timeout()),this,SLOT(sunFlowerSun()));
         grid[click->y()/100][click->x()/90]=false;
         break;
     }
@@ -399,13 +390,11 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
     }
     for(int i=0;i<sunVector.size();i++)
     {
-        //if(sunVector[i]->getX()+n==click->x()&&sunVector[i]->getY()+n==click->y())
         if(sunVector[i]->areaX(click->x())&&sunVector[i]->areaY(click->y()))
         {
             sunVector[i]->setClicked();
             scene()->removeItem(sunVector[i]);
             addSunPoints(25);
-           // break;
         }
     }
 }
@@ -422,8 +411,6 @@ void GameDisplay::dropSun()
     }
     s = new Sun(xCoord,yCoord,homePath.currentPath()+"/icons/sun.png",1);
     sunVector.push_back(s);
-   // scene()->addPixmap(s->getPicture())->setPos(xCoord,yCoord);
-   // scene()->addRect(s->boundingRect(),QPen(Qt::black),QBrush(s->getPicture()))->setPos(xCoord,yCoord);
     scene()->addItem(s);
 }
 
@@ -431,8 +418,9 @@ void GameDisplay::sunFlowerSun()
 {
     for(int i=0;i<plantVector.size();i++)
     {
-        if(plantVector[i]->getType()==2&&plantVector[i]->getLife()>0)
+        if(plantVector[i]->getType()==2&&plantVector[i]->getLife()>0&&plantVector[i]->okayToPlant())
         {
+
             s = new Sun(plantVector[i]->getX(),plantVector[i]->getY(),homePath.currentPath()+"/icons/sun.png",2);
             sunVector.push_back(s);
             scene()->addItem(s);
@@ -460,14 +448,11 @@ void GameDisplay::spawnZombies()
         }
         if(getCurrentLevel()>2)
         {
-    //        for(int i=0;i<levelSequenceNumber[getCurrentLevel()].size();i++)
-    //        {
                 int randomRow;
                 randomRow=rand()%5;
                 z = new Zombies(levelSequenceNumber[getCurrentLevel()-1].at(zombieIndex).toInt(),900,100*randomRow);
                 zombieVector.push_back(z);
                 scene()->addItem(z);
-    //        }
         }
     }
     if(zombieIndex!=levelSequenceNumber[getCurrentLevel()-1].size()-1)
@@ -500,6 +485,7 @@ void GameDisplay::moveZombiesAndPlants()
         zombieVector[i]->slideZombie();
         scene()->update();
     }
+
     for(int i=0;i<sunVector.size();i++)
     {
         if(sunVector[i]->getType()==1)
@@ -510,20 +496,3 @@ void GameDisplay::moveZombiesAndPlants()
     }
 
 }
-//void GameDisplay::handlemouse(QEvent *mouse)
-//{
-//    if(mouse!=0)
-//    {
-//        mouseEvent=static_cast<QMouseEvent *>(mouse);
-//    }
-//    std::cout<<"gamedisplay event   "<<mouseEvent->pos().x()<<"       "<<mouseEvent->pos().y()<<std::endl;
-//    xCoord=mouseEvent->x();
-//    yCoord=mouseEvent->y();
-//    if(plantType==1)
-//    {
-//        scene1->addEllipse(xCoord,yCoord,20,20,QPen(Qt::black),QBrush(Qt::red));
-//        //plantType=0;
-//    }
-
-//    mouseEvent=0;
-//}

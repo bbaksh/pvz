@@ -8,6 +8,7 @@
 #include <QMouseEvent>
 #include <plants.h>
 #include <zombies.h>
+#include <bullets.h>
 #include <vector>
 #include <sun.h>
 #include <QGraphicsScene>
@@ -29,14 +30,14 @@ private:
     int zombieIndex;
     int zombieAttackDelay;
     bool zombiesFinished;
-
     Plants *p;
     Zombies *z;
     Sun *s;
+    Bullets *b;
     std::vector<Plants *>plantVector;
     std::vector<Zombies *>zombieVector;
     std::vector<Sun *>sunVector;
-    std::vector<QTimer *>sunFlowerTimer;
+    std::vector<Bullets *>bulletVector;
 
 public:
     explicit GameDisplay(QWidget *parent = 0);
@@ -45,17 +46,12 @@ public:
     QMouseEvent *mouseEvent;
     QString mainScreen();
     void setGridFromLevel();
-    void setPlant(int i);
     void setPlantType(const int i);
     int getPlantType();
     int getRows(int i);
     void setLevel(int i);
     bool cellEmpty(int x, int y);
-    //void zombieHitPlant(Zombies *zombie,Plants *plant);
     QTimer *sunflowerTimer;
-
-
-
 
 signals:
     void mouse();
@@ -63,7 +59,6 @@ signals:
     void zombieAttack(Zombies *zombie,Plants *plant);
 public slots:
     void mousePressEvent(QMouseEvent *click);
-  //  void handlemouse(QEvent *mouse=0);
     void dropSun();
     void sunFlowerSun();
     void spawnZombies();

@@ -39,13 +39,18 @@ MainWindow::MainWindow(QWidget *parent) :
     pvz->scene1->addPixmap(pvz->mainScreen());
     ui->graphicsView->adjustSize();
     //this->connect(this,SIGNAL(mouseclick(QEvent*)),this,SLOT(handleclick(QEvent*)));
+
     timer = new QTimer(this);
     this->connect(timer, SIGNAL(timeout()), pvz, SLOT(dropSun()));
+
     updateSuns = new QTimer(this);
     this->connect(updateSuns,SIGNAL(timeout()),this,SLOT(updateSunLabel()));
-    pvz->sunflowerTimer = new QTimer(this);
+
+   // pvz->sunflowerTimer = new QTimer(this);
+
     zombieTimer = new QTimer(this);
     this->connect(zombieTimer,SIGNAL(timeout()),pvz,SLOT(spawnZombies()));
+
     animateZombie = new QTimer(this);
     this->connect(animateZombie,SIGNAL(timeout()),pvz,SLOT(moveZombiesAndPlants()));
    //this->connect(pvz->sunflowerTimer,SIGNAL(timeout()),pvz,SLOT(sunFlowerSun()));
@@ -242,12 +247,6 @@ void MainWindow::on_restartButton_clicked()
     {
 
     }
-}
-
-void MainWindow::handleclick(QEvent *mouse)
-{
-
-    //emit pvz->handlemouse(mouse);
 }
 
 void MainWindow::updateSunLabel()

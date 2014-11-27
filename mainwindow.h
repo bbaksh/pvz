@@ -45,9 +45,8 @@ private slots:
 
    void on_restartButton_clicked();
 
-   void handleclick(QEvent *);
-
    void updateSunLabel();
+
    void on_plant2Button_clicked();
 
    void on_plant3Button_clicked();

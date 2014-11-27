@@ -76,9 +76,19 @@ int Zombies::getY() const
     return yPos;
 }
 
+int Zombies::getLife()
+{
+    return life;
+}
+
 int Zombies::getAttack() const
 {
     return attack;
+}
+
+void Zombies::loseHealth(int damage)
+{
+    life=life-damage;
 }
 
 void Zombies::setMovement(bool x)
@@ -95,6 +105,12 @@ void Zombies::slideZombie()
     }
 }
 
+void Zombies::setPosition(int xPos, int yPos)
+{
+    this->xPos=xPos;
+    this->yPos=yPos;
+}
+
 void Zombies::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     painter->drawPixmap(xPos,yPos,90,100,zombiePicture);
@@ -103,4 +119,14 @@ void Zombies::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, Q
 void Zombies::advance(int phase)
 {
     setPos(xPos,yPos);
+}
+
+bool Zombies::inArea(int x, int y)
+{
+    for(int i=0;i<30;i++)
+    {
+        if(x==i&&y==yPos)
+            return true;
+    }
+    return false;
 }

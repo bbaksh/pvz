@@ -4,6 +4,8 @@
 #include <QGraphicsPixmapItem>
 #include <QDir>
 #include <QPainter>
+#include <QTimer>
+#include <QGraphicsObject>
 
 class Plants : public QGraphicsPixmapItem
 {
@@ -26,7 +28,9 @@ protected:
     int need;
     int xPos;
     int yPos;
+    int sunTimer;
     bool dead;
+    bool plantSun;
 public:
     Plants();
     Plants(int type, int xPos, int yPos);
@@ -36,8 +40,9 @@ public:
     void loseHealth(int attack);
     int getX();
     int getY();
-    int getType();
+    int getType() const;
     bool getStatus();
+    bool okayToPlant();
     void setStatus(bool status);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     void advance(int phase);
