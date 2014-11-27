@@ -27,6 +27,7 @@ private:
     double yCoord;
     int sunFlowerIndex;
     int zombieIndex;
+    int zombieAttackDelay;
     bool zombiesFinished;
 
     Plants *p;
@@ -50,6 +51,7 @@ public:
     int getRows(int i);
     void setLevel(int i);
     bool cellEmpty(int x, int y);
+    //void zombieHitPlant(Zombies *zombie,Plants *plant);
     QTimer *sunflowerTimer;
 
 
@@ -58,6 +60,7 @@ public:
 signals:
     void mouse();
     void sunFlowerPlanted();
+    void zombieAttack(Zombies *zombie,Plants *plant);
 public slots:
     void mousePressEvent(QMouseEvent *click);
   //  void handlemouse(QEvent *mouse=0);
@@ -65,6 +68,7 @@ public slots:
     void sunFlowerSun();
     void spawnZombies();
     void moveZombiesAndPlants();
+    void zombieHitPlant(Zombies *zombie,Plants *plant);
 
 };
 

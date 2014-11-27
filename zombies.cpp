@@ -9,6 +9,7 @@ Zombies::Zombies()
     rate=0;
     speed=0;
     file=0;
+    keepMoving=true;
 }
 
 Zombies::Zombies(int type,int xPos,int yPos)
@@ -16,6 +17,7 @@ Zombies::Zombies(int type,int xPos,int yPos)
     this->type=type;
     this->xPos=xPos;
     this->yPos=yPos;
+    keepMoving=true;
     if(this->type==1)
     {
         life=10;
@@ -50,7 +52,7 @@ Zombies::Zombies(int type,int xPos,int yPos)
         attack=1;
         rate=0.5;
         speed=5;
-        zombiePicture=file.currentPath()+"/icons/zombie1.png";
+        zombiePicture=file.currentPath()+"/icons/zombie4.png";
     }
     if(this->type==5)
     {
@@ -59,20 +61,38 @@ Zombies::Zombies(int type,int xPos,int yPos)
         attack=1;
         rate=0.5;
         speed=5;
-        zombiePicture=file.currentPath()+"/icons/zombie1.png";
+        zombiePicture=file.currentPath()+"/icons/zombie5.png";
     }
 
 }
 
-int Zombies::moveZombie()
+int Zombies::getX() const
 {
-    xPos-=5;
     return xPos;
 }
 
+int Zombies::getY() const
+{
+    return yPos;
+}
+
+int Zombies::getAttack() const
+{
+    return attack;
+}
+
+void Zombies::setMovement(bool x)
+{
+    keepMoving=x;
+}
+
+
 void Zombies::slideZombie()
 {
-    xPos--;
+    if(keepMoving)
+    {
+    xPos-=2;
+    }
 }
 
 void Zombies::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

@@ -16,6 +16,8 @@ GameDisplay::GameDisplay(QWidget *parent) :
     sunFlowerIndex=0;
     zombieIndex=0;
     zombiesFinished=true;
+    zombieAttackDelay=0;
+    connect(this,SIGNAL(zombieAttack(Zombies*,Plants*)),this,SLOT(zombieHitPlant(Zombies*,Plants*)));
 
 }
 
@@ -193,6 +195,21 @@ bool GameDisplay::cellEmpty(int x, int y)
     return grid[y/100][x/90];
 }
 
+void GameDisplay::zombieHitPlant(Zombies *zombie, Plants *plant)
+{
+    if(zombieAttackDelay%5==0)
+    {
+        if(plant->getLife()!=0)
+            plant->loseHealth(zombie->getAttack());
+        else
+        {
+            plant->setPosition(-1,-1);
+            plant->setStatus(true);
+        }
+    }
+    zombieAttackDelay++;
+}
+
 void GameDisplay::mousePressEvent(QMouseEvent *click)
 {
     std::cout<<plantType<<std::endl;
@@ -218,13 +235,14 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
                 if(click->x()>=x&&click->x()<=(x+90)&&click->y()>=y&&click->y()<=(y+100))
                 {
                         scene()->addPixmap(homePath.currentPath()+"/icons/peashooter1.png")->setPos(x,y);
-
+                        p->setPosition(x,y);
                         break;
                 }
 
             }
         }
         grid[click->y()/100][click->x()/90]=false;
+        ;
         break;
     }
         case 2:
@@ -241,7 +259,7 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
                 if(click->x()>=x&&click->x()<=(x+90)&&click->y()>=y&&click->y()<=(y+100))
                 {
                         scene()->addPixmap(homePath.currentPath()+"/icons/sunflower1.png")->setPos(x,y);
-
+                        p->setPosition(x,y);
                         break;
                 }
 
@@ -266,7 +284,7 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
                 if(click->x()>=x&&click->x()<=(x+90)&&click->y()>=y&&click->y()<=(y+100))
                 {
                         scene()->addPixmap(homePath.currentPath()+"/icons/cherrybomb1.png")->setPos(x,y);
-
+                        p->setPosition(x,y);
                         break;
                 }
 
@@ -288,7 +306,7 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
                 if(click->x()>=x&&click->x()<=(x+90)&&click->y()>=y&&click->y()<=(y+100))
                 {
                         scene()->addPixmap(homePath.currentPath()+"/icons/wallnut1.png")->setPos(x,y);
-
+                        p->setPosition(x,y);
                         break;
                 }
 
@@ -310,7 +328,7 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
                 if(click->x()>=x&&click->x()<=(x+90)&&click->y()>=y&&click->y()<=(y+100))
                 {
                         scene()->addPixmap(homePath.currentPath()+"/icons/potatomine1.png")->setPos(x,y);
-
+                        p->setPosition(x,y);
                         break;
                 }
 
@@ -332,7 +350,7 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
                 if(click->x()>=x&&click->x()<=(x+90)&&click->y()>=y&&click->y()<=(y+100))
                 {
                         scene()->addPixmap(homePath.currentPath()+"/icons/snowpea1.png")->setPos(x,y);
-
+                        p->setPosition(x,y);
                         break;
                 }
 
@@ -354,7 +372,7 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
                     if(click->x()>=x&&click->x()<=(x+90)&&click->y()>=y&&click->y()<=(y+100))
                     {
                             scene()->addPixmap(homePath.currentPath()+"/icons/chomper1.png")->setPos(x,y);
-
+                            p->setPosition(x,y);
                             break;
                     }
 
@@ -376,7 +394,7 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
                     if(click->x()>=x&&click->x()<=(x+90)&&click->y()>=y&&click->y()<=(y+100))
                     {
                             scene()->addPixmap(homePath.currentPath()+"/icons/repeater1.png")->setPos(x,y);
-
+                            p->setPosition(x,y);
                             break;
                     }
 
@@ -472,9 +490,23 @@ void GameDisplay::moveZombiesAndPlants()
 {
     for(int i=0;i<zombieVector.size();i++)
     {
+        for(int n=0;n<plantVector.size();n++)
+        {
+            if(zombieVector[i]->getX()==plantVector[n]->getX()&&zombieVector[i]->getY()==plantVector[n]->getY())
+            {
+                zombieVector[i]->setMovement(false);
+                emit zombieAttack(zombieVector[i],plantVector[n]);
+                //zombieHitPlant(zombieVector[i],plantVector[n]);
+
+            }
+            else
+            {
+                if(plantVector[n]->getStatus())
+                    zombieVector[i]->setMovement(true);
+            }
+        }
         zombieVector[i]->slideZombie();
         scene()->update();
-
     }
     for(int i=0;i<sunVector.size();i++)
     {

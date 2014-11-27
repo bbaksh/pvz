@@ -16,10 +16,12 @@ Plants::Plants()
     type=0;
     xPos=0;
     yPos=0;
+    dead=false;
 }
 
 Plants::Plants(int type, int cost, int life, int range, int damage, double rate, int splash, int slow, int bomb, double seeding, int sun, int need)
 {
+    dead=false;
     this->type=type;
     this->cost=cost;
     this->life=life;
@@ -40,10 +42,20 @@ int Plants::getCost() const
     return cost;
 }
 
+int Plants::getLife() const
+{
+    return life;
+}
+
 void Plants::setPosition(int x, int y)
 {
     xPos=x;
     yPos=y;
+}
+
+void Plants::loseHealth(int attack)
+{
+    life=life-attack;
 }
 
 int Plants::getX()
@@ -59,4 +71,14 @@ int Plants::getY()
 int Plants::getType()
 {
     return type;
+}
+
+bool Plants::getStatus()
+{
+    return dead;
+}
+
+void Plants::setStatus(bool status)
+{
+    dead=status;
 }

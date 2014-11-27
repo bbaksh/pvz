@@ -17,13 +17,17 @@ private:
     double speed;
     int xPos;
     int yPos;
+    bool keepMoving;
     QDir file;
     QPixmap zombiePicture;
 protected:
 public:
     Zombies();
     Zombies(int type,int xPos,int yPos);
-    int moveZombie();
+    int getX() const;
+    int getY() const;
+    int getAttack() const;
+    void setMovement(bool x);
     void slideZombie();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     void advance(int phase);
