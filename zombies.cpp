@@ -97,7 +97,7 @@ void Zombies::slideZombie()
 
 void Zombies::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    painter->drawPixmap(xPos,yPos,100,90,zombiePicture);
+    painter->drawPixmap(xPos,yPos,90,100,zombiePicture);
 }
 
 void Zombies::advance(int phase)

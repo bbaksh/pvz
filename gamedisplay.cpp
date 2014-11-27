@@ -203,8 +203,11 @@ void GameDisplay::zombieHitPlant(Zombies *zombie, Plants *plant)
             plant->loseHealth(zombie->getAttack());
         else
         {
+            grid[plant->getY()/100][plant->getX()/90]=true;
             plant->setPosition(-1,-1);
             plant->setStatus(true);
+            scene()->removeItem(plant);
+            delete plant;
         }
     }
     zombieAttackDelay++;
@@ -223,43 +226,38 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
         {
         case 1:
     {
-        p = new Plants(1,100,4,9999,1,1.5,0,0,0,7.5,0,0);
-        plantVector.push_back(p);
-        plantType=0;
-        subtractSunPoints(p->getCost());
-        QGraphicsPixmapItem peashooter1(QPixmap(homePath.currentPath()+"/icons/peashooter1.png"));
         for(int x=0;x<900;x+=90)
         {
             for(int y=0;y<500;y+=100)
             {
                 if(click->x()>=x&&click->x()<=(x+90)&&click->y()>=y&&click->y()<=(y+100))
                 {
-                        scene()->addPixmap(homePath.currentPath()+"/icons/peashooter1.png")->setPos(x,y);
-                        p->setPosition(x,y);
+                        p = new Plants(1,x,y);
+                        plantVector.push_back(p);
+                        plantType=0;
+                        subtractSunPoints(p->getCost());
+                        scene()->addItem(p);
                         break;
                 }
 
             }
         }
         grid[click->y()/100][click->x()/90]=false;
-        ;
         break;
     }
         case 2:
     {
-        p = new Plants(2,50,4,0,0,24,0,0,0,7.5,1,0);
-        plantVector.push_back(p);
-        plantType=0;
-        p->setPosition(click->x(),click->y());
-        subtractSunPoints(p->getCost());
         for(int x=0;x<900;x+=90)
         {
             for(int y=0;y<500;y+=100)
             {
                 if(click->x()>=x&&click->x()<=(x+90)&&click->y()>=y&&click->y()<=(y+100))
                 {
-                        scene()->addPixmap(homePath.currentPath()+"/icons/sunflower1.png")->setPos(x,y);
-                        p->setPosition(x,y);
+                        p = new Plants(2,x,y);
+                        plantVector.push_back(p);
+                        plantType=0;
+                        subtractSunPoints(p->getCost());
+                        scene()->addItem(p);
                         break;
                 }
 
@@ -273,18 +271,17 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
     }
         case 3:
     {
-        p = new Plants(3,150,9999,1,90,1,3,0,1,50,0,0);
-        plantVector.push_back(p);
-        plantType=0;
-        subtractSunPoints(p->getCost());
         for(int x=0;x<900;x+=90)
         {
             for(int y=0;y<500;y+=100)
             {
                 if(click->x()>=x&&click->x()<=(x+90)&&click->y()>=y&&click->y()<=(y+100))
                 {
-                        scene()->addPixmap(homePath.currentPath()+"/icons/cherrybomb1.png")->setPos(x,y);
-                        p->setPosition(x,y);
+                        p = new Plants(3,x,y);
+                        plantVector.push_back(p);
+                        plantType=0;
+                        subtractSunPoints(p->getCost());
+                        scene()->addItem(p);
                         break;
                 }
 
@@ -295,18 +292,17 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
     }
         case 4:
     {
-        p = new Plants(4,50,72,0,0,0,0,0,0,30,0,0);
-        plantVector.push_back(p);
-        plantType=0;
-        subtractSunPoints(p->getCost());
         for(int x=0;x<900;x+=90)
         {
             for(int y=0;y<500;y+=100)
             {
                 if(click->x()>=x&&click->x()<=(x+90)&&click->y()>=y&&click->y()<=(y+100))
                 {
-                        scene()->addPixmap(homePath.currentPath()+"/icons/wallnut1.png")->setPos(x,y);
-                        p->setPosition(x,y);
+                        p = new Plants(4,x,y);
+                        plantVector.push_back(p);
+                        plantType=0;
+                        subtractSunPoints(p->getCost());
+                        scene()->addItem(p);
                         break;
                 }
 
@@ -317,18 +313,17 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
     }
         case 5:
     {
-        p = new Plants(5,25,4,1,90,15,0,0,1,7.5,0,0);
-        plantVector.push_back(p);
-        plantType=0;
-        subtractSunPoints(p->getCost());
         for(int x=0;x<900;x+=90)
         {
             for(int y=0;y<500;y+=100)
             {
                 if(click->x()>=x&&click->x()<=(x+90)&&click->y()>=y&&click->y()<=(y+100))
                 {
-                        scene()->addPixmap(homePath.currentPath()+"/icons/potatomine1.png")->setPos(x,y);
-                        p->setPosition(x,y);
+                        p = new Plants(5,x,y);
+                        plantVector.push_back(p);
+                        plantType=0;
+                        subtractSunPoints(p->getCost());
+                        scene()->addItem(p);
                         break;
                 }
 
@@ -339,18 +334,17 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
     }
         case 6:
     {
-        p = new Plants(6,175,4,9999,1,1.5,0,1,0,7.5,0,0);
-        plantVector.push_back(p);
-        plantType=0;
-        subtractSunPoints(p->getCost());
         for(int x=0;x<900;x+=90)
         {
             for(int y=0;y<500;y+=100)
             {
                 if(click->x()>=x&&click->x()<=(x+90)&&click->y()>=y&&click->y()<=(y+100))
                 {
-                        scene()->addPixmap(homePath.currentPath()+"/icons/snowpea1.png")->setPos(x,y);
-                        p->setPosition(x,y);
+                        p = new Plants(6,x,y);
+                        plantVector.push_back(p);
+                        plantType=0;
+                        subtractSunPoints(p->getCost());
+                        scene()->addItem(p);
                         break;
                 }
 
@@ -361,18 +355,17 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
     }
         case 7:
         {
-            p = new Plants(7,150,4,1,150,42,0,0,0,7.5,0,0);
-            plantVector.push_back(p);
-            plantType=0;
-            subtractSunPoints(p->getCost());
             for(int x=0;x<900;x+=90)
             {
                 for(int y=0;y<500;y+=100)
                 {
                     if(click->x()>=x&&click->x()<=(x+90)&&click->y()>=y&&click->y()<=(y+100))
                     {
-                            scene()->addPixmap(homePath.currentPath()+"/icons/chomper1.png")->setPos(x,y);
-                            p->setPosition(x,y);
+                            p = new Plants(7,x,y);
+                            plantVector.push_back(p);
+                            plantType=0;
+                            subtractSunPoints(p->getCost());
+                            scene()->addItem(p);
                             break;
                     }
 
@@ -383,18 +376,17 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
         }
         case 8:
         {
-            p = new Plants(8,200,4,9999,2,1.5,0,0,0,7.5,0,1);
-            plantVector.push_back(p);
-            plantType=0;
-            subtractSunPoints(p->getCost());
             for(int x=0;x<900;x+=90)
             {
                 for(int y=0;y<500;y+=100)
                 {
                     if(click->x()>=x&&click->x()<=(x+90)&&click->y()>=y&&click->y()<=(y+100))
                     {
-                            scene()->addPixmap(homePath.currentPath()+"/icons/repeater1.png")->setPos(x,y);
-                            p->setPosition(x,y);
+                            p = new Plants(8,x,y);
+                            plantVector.push_back(p);
+                            plantType=0;
+                            subtractSunPoints(p->getCost());
+                            scene()->addItem(p);
                             break;
                     }
 
@@ -439,7 +431,7 @@ void GameDisplay::sunFlowerSun()
 {
     for(int i=0;i<plantVector.size();i++)
     {
-        if(plantVector[i]->getType()==2)
+        if(plantVector[i]->getType()==2&&plantVector[i]->getLife()>0)
         {
             s = new Sun(plantVector[i]->getX(),plantVector[i]->getY(),homePath.currentPath()+"/icons/sun.png",2);
             sunVector.push_back(s);

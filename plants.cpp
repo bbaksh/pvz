@@ -19,22 +19,151 @@ Plants::Plants()
     dead=false;
 }
 
-Plants::Plants(int type, int cost, int life, int range, int damage, double rate, int splash, int slow, int bomb, double seeding, int sun, int need)
+Plants::Plants(int type, int xPos, int yPos)
 {
     dead=false;
-    this->type=type;
-    this->cost=cost;
-    this->life=life;
-    this->range=range;
-    this->damage=damage;
-    this->rate=rate;
-    this->splash=splash;
-    this->slow=slow;
-    this->bomb=bomb;
-    this->seeding=seeding;
-    this->sun=sun;
-    this->need=need;
-
+    if(type==1)
+    {
+        plantPicture=file.currentPath()+"/icons/peashooter1.png";
+        this->type=type;
+        this->xPos=xPos;
+        this->yPos=yPos;
+        cost=100;
+        life=4;
+        range=9999;
+        damage=1;
+        rate=1.5;
+        splash=0;
+        slow=0;
+        bomb=0;
+        seeding=7.5;
+        sun=0;
+        need=0;
+    }
+    if(type==2)
+    {
+        plantPicture=file.currentPath()+"/icons/sunflower1.png";
+        this->type=type;
+        this->xPos=xPos;
+        this->yPos=yPos;
+        cost=50;
+        life=4;
+        range=0;
+        damage=0;
+        rate=24;
+        splash=0;
+        slow=0;
+        bomb=0;
+        seeding=7.5;
+        sun=1;
+        need=0;
+    }
+    if(type==3)
+    {
+        plantPicture=file.currentPath()+"/icons/cherrybomb1.png";
+        this->type=type;
+        this->xPos=xPos;
+        this->yPos=yPos;
+        cost=150;
+        life=9999;
+        range=1;
+        damage=90;
+        rate=1;
+        splash=3;
+        slow=0;
+        bomb=1;
+        seeding=50;
+        sun=0;
+        need=0;
+    }
+    if(type==4)
+    {
+        plantPicture=file.currentPath()+"/icons/wallnut1.png";
+        this->type=type;
+        this->xPos=xPos;
+        this->yPos=yPos;
+        cost=50;
+        life=72;
+        range=0;
+        damage=0;
+        rate=0;
+        splash=0;
+        slow=0;
+        bomb=0;
+        seeding=30;
+        sun=0;
+        need=0;
+    }
+    if(type==5)
+    {
+        plantPicture=file.currentPath()+"/icons/patatomine1.png";
+        this->type=type;
+        this->xPos=xPos;
+        this->yPos=yPos;
+        cost=25;
+        life=4;
+        range=1;
+        damage=90;
+        rate=15;
+        splash=0;
+        slow=0;
+        bomb=1;
+        seeding=30;
+        sun=0;
+        need=0;
+    }
+    if(type==6)
+    {
+        plantPicture=file.currentPath()+"/icons/snowpea1.png";
+        this->type=type;
+        this->xPos=xPos;
+        this->yPos=yPos;
+        cost=175;
+        life=4;
+        range=9999;
+        damage=1;
+        rate=1.5;
+        splash=0;
+        slow=1;
+        bomb=0;
+        seeding=7.5;
+        sun=0;
+        need=0;
+    }
+    if(type==7)
+    {
+        plantPicture=file.currentPath()+"/icons/chomper1.png";this->type=type;
+        this->xPos=xPos;
+        this->yPos=yPos;
+        cost=150;
+        life=4;
+        range=1;
+        damage=150;
+        rate=42;
+        splash=0;
+        slow=0;
+        bomb=0;
+        seeding=7.5;
+        sun=0;
+        need=0;
+    }
+    if(type==8)
+    {
+        plantPicture=file.currentPath()+"/icons/repeater1.png";this->type=type;
+        this->xPos=xPos;
+        this->yPos=yPos;
+        cost=200;
+        life=4;
+        range=9999;
+        damage=2;
+        rate=1.5;
+        splash=0;
+        slow=0;
+        bomb=0;
+        seeding=7.5;
+        sun=0;
+        need=1;
+    }
 }
 
 int Plants::getCost() const
@@ -81,4 +210,14 @@ bool Plants::getStatus()
 void Plants::setStatus(bool status)
 {
     dead=status;
+}
+
+void Plants::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+        painter->drawPixmap(xPos,yPos,90,100,plantPicture);
+}
+
+void Plants::advance(int phase)
+{
+    setPosition(xPos,yPos);
 }
