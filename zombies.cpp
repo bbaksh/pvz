@@ -125,7 +125,7 @@ bool Zombies::inArea(int x, int y)
 {
     for(int i=0;i<30;i++)
     {
-        if(x==i&&y==yPos)
+        if(x==xPos+i&&y==yPos)
             return true;
     }
     return false;

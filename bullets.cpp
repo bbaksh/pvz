@@ -6,7 +6,10 @@ Bullets::Bullets()
 
 Bullets::Bullets(int type, int xPos, int yPos)
 {
-    damage=5;
+    if(type==8)
+        damage=2;
+    else
+        damage=1;
     this->type=type;
     this->xPos=xPos;
     this->yPos=yPos;

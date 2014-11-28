@@ -29,8 +29,10 @@ protected:
     int xPos;
     int yPos;
     int sunTimer;
+    int fireTimer;
     bool dead;
     bool plantSun;
+    bool shootZombie;
 public:
     Plants();
     Plants(int type, int xPos, int yPos);
@@ -41,6 +43,8 @@ public:
     int getX();
     int getY();
     int getType() const;
+    bool okayToShoot();
+    void setOkayToShoot(bool x);
     bool getStatus();
     bool okayToPlant();
     void setStatus(bool status);

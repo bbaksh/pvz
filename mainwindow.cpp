@@ -216,7 +216,7 @@ void MainWindow::on_startButton_clicked()
     //ui->startButton->hide();
     updateSuns->start(20);
     timer->start(10000);//10000ms is 10 seconds
-    zombieTimer->start(5000);
+    zombieTimer->start(1000);
     animateZombie->start(25);
     pvz->scene1->clear();
     pvz->setLevel(pvz->getRows(pvz->getCurrentLevel()));

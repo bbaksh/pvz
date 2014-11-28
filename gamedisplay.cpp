@@ -17,11 +17,14 @@ GameDisplay::GameDisplay(QWidget *parent) :
     zombieIndex=0;
     zombiesFinished=true;
     zombieAttackDelay=0;
+    plantAttackDelay=20;
     connect(this,SIGNAL(zombieAttack(Zombies*,Plants*)),this,SLOT(zombieHitPlant(Zombies*,Plants*)));
     sunflowerTimer = new QTimer(this);
     sunflowerTimer->start(100);
     this->connect(this->sunflowerTimer,SIGNAL(timeout()),this,SLOT(sunFlowerSun()));
+    connect(this,SIGNAL(plantAttack(Zombies*,Plants*)),this,SLOT(plantShootZombie(Zombies*,Plants*)));
 }
+
 
 
 QString GameDisplay::mainScreen()
@@ -202,10 +205,52 @@ void GameDisplay::zombieHitPlant(Zombies *zombie, Plants *plant)
             plant->setPosition(-1,-1);
             plant->setStatus(true);
             scene()->removeItem(plant);
-            delete plant;
         }
     }
     zombieAttackDelay++;
+}
+
+void GameDisplay::plantShootZombie(Zombies *zombie, Plants *plant)
+{
+    if(plant->getLife()>0)
+    {
+    if(plantAttackDelay%50==0&&plant->okayToShoot())
+    {
+//        plant->setOkayToShoot(false);
+        b = new Bullets(plant->getType(),plant->getX(),plant->getY());
+        bulletVector.push_back(b);
+        scene()->addItem(b);
+    }
+    plantAttackDelay++;
+    for(int i=0;i<bulletVector.size();i++)
+    {
+        bulletVector[i]->slideBullet();
+        if(zombie->inArea(bulletVector[i]->getX(),bulletVector[i]->getY())&&zombie->getLife()>0)
+        {
+
+            zombie->loseHealth(bulletVector[i]->getDamage());
+            scene()->removeItem(bulletVector[i]);
+            bulletVector[i]->setPosition(-1,-1);
+        }
+        if(zombie->getLife()<=0)
+        {
+            plant->setOkayToShoot(true);
+            scene()->removeItem(zombie);
+            zombie->setPosition(-1,-1);
+            for(int n=0;n<bulletVector.size();n++)
+            {
+                if(bulletVector[n]->getX()!=-1&&bulletVector[n]->getY()!=-1)
+                {
+                    scene()->removeItem(bulletVector[n]);
+                    bulletVector[n]->setPosition(-1,-1);
+                }
+            }
+        }
+
+
+    }
+    }
+    scene()->update();
 }
 
 
@@ -469,17 +514,48 @@ void GameDisplay::moveZombiesAndPlants()
     {
         for(int n=0;n<plantVector.size();n++)
         {
-            if(zombieVector[i]->getX()==plantVector[n]->getX()&&zombieVector[i]->getY()==plantVector[n]->getY())
+            if(zombieVector[i]->getX()!=-1&&plantVector[n]->getX()!=-1)
             {
-                zombieVector[i]->setMovement(false);
-                emit zombieAttack(zombieVector[i],plantVector[n]);
-                //zombieHitPlant(zombieVector[i],plantVector[n]);
+                if(zombieVector[i]->getX()==plantVector[n]->getX()&&zombieVector[i]->getY()==plantVector[n]->getY())
+                {
+                    zombieVector[i]->setMovement(false);
+                    emit zombieAttack(zombieVector[i],plantVector[n]);
+                    //zombieHitPlant(zombieVector[i],plantVector[n]);
 
-            }
-            else
-            {
-                if(plantVector[n]->getStatus())
-                    zombieVector[i]->setMovement(true);
+                }
+                else
+                {
+                    if(plantVector[n]->getStatus())
+                        zombieVector[i]->setMovement(true);
+                }
+                if(zombieVector[i]->getX()>=plantVector[n]->getX()&&zombieVector[i]->getY()==plantVector[n]->getY())
+                {
+                    if((plantVector[n]->getType()==1||plantVector[n]->getType()==6||plantVector[n]->getType()==8))
+                    {
+                        emit plantAttack(zombieVector[i],plantVector[n]);
+                    }
+                }
+                if(zombieVector[i]->getX()==plantVector[n]->getX()&&zombieVector[i]->getY()==plantVector[n]->getY()&&plantVector[n]->getType()==5)
+                {
+                    plantVector[n]->setPosition(-1,-1);
+                    zombieVector[i]->setPosition(-1,-1);
+                    scene()->removeItem(plantVector[n]);
+                    scene()->removeItem(zombieVector[i]);
+                }
+                if(zombieVector[i]->getX()==plantVector[n]->getX()&&zombieVector[i]->getY()==plantVector[n]->getY()&&plantVector[n]->getType()==3)
+                {
+                    for(int m=0;m<zombieVector.size();m++)
+                    {
+                        if((zombieVector[m]->getX()>=plantVector[n]->getX()-90)&&(zombieVector[m]->getX()<=plantVector[n]->getX()+180)&&(zombieVector[m]->getY()>plantVector[n]->getY()-100)&&(zombieVector[m]->getY()<=plantVector[n]->getY()+200))
+                        {
+                            zombieVector[m]->setPosition(-1,-1);
+                            scene()->removeItem(zombieVector[m]);
+                        }
+                    }
+                    plantVector[n]->setPosition(-1,-1);
+                    scene()->removeItem(plantVector[n]);
+                }
+
             }
         }
         zombieVector[i]->slideZombie();
@@ -490,8 +566,8 @@ void GameDisplay::moveZombiesAndPlants()
     {
         if(sunVector[i]->getType()==1)
         {
-        sunVector[i]->slideSun();
-        scene()->update();
+            sunVector[i]->slideSun();
+            scene()->update();
         }
     }
 

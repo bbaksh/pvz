@@ -2,7 +2,7 @@
 
 GamePlay::GamePlay()
 {
-    sunPoints=200;
+    sunPoints=300;
 }
 
 void GamePlay::subtractSunPoints(int x)

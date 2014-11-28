@@ -21,8 +21,10 @@ Plants::Plants()
 
 Plants::Plants(int type, int xPos, int yPos)
 {
+    fireTimer=1;
     sunTimer=1;
     plantSun=false;
+    shootZombie=false;
     dead=false;
     if(type==1)
     {
@@ -41,6 +43,7 @@ Plants::Plants(int type, int xPos, int yPos)
         seeding=7.5;
         sun=0;
         need=0;
+        shootZombie=true;
     }
     if(type==2)
     {
@@ -132,6 +135,7 @@ Plants::Plants(int type, int xPos, int yPos)
         seeding=7.5;
         sun=0;
         need=0;
+        shootZombie=true;
     }
     if(type==7)
     {
@@ -166,6 +170,7 @@ Plants::Plants(int type, int xPos, int yPos)
         seeding=7.5;
         sun=0;
         need=1;
+        shootZombie=true;
     }
 }
 
@@ -203,6 +208,16 @@ int Plants::getY()
 int Plants::getType() const
 {
     return type;
+}
+
+bool Plants::okayToShoot()
+{
+    return shootZombie;
+}
+
+void Plants::setOkayToShoot(bool x)
+{
+    shootZombie=x;
 }
 
 bool Plants::getStatus()

@@ -29,6 +29,7 @@ private:
     int sunFlowerIndex;
     int zombieIndex;
     int zombieAttackDelay;
+    int plantAttackDelay;
     bool zombiesFinished;
     Plants *p;
     Zombies *z;
@@ -57,6 +58,7 @@ signals:
     void mouse();
     void sunFlowerPlanted();
     void zombieAttack(Zombies *zombie,Plants *plant);
+    void plantAttack(Zombies *zombie,Plants *plant);
 public slots:
     void mousePressEvent(QMouseEvent *click);
     void dropSun();
@@ -64,6 +66,7 @@ public slots:
     void spawnZombies();
     void moveZombiesAndPlants();
     void zombieHitPlant(Zombies *zombie,Plants *plant);
+    void plantShootZombie(Zombies *zombie,Plants *plant);
 
 };
 
