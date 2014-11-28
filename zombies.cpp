@@ -123,7 +123,7 @@ void Zombies::advance(int phase)
 
 bool Zombies::inArea(int x, int y)
 {
-    for(int i=0;i<30;i++)
+    for(int i=0;i<15;i++)
     {
         if(x==xPos+i&&y==yPos)
             return true;

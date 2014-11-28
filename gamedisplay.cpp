@@ -18,11 +18,14 @@ GameDisplay::GameDisplay(QWidget *parent) :
     zombiesFinished=true;
     zombieAttackDelay=0;
     plantAttackDelay=20;
-    connect(this,SIGNAL(zombieAttack(Zombies*,Plants*)),this,SLOT(zombieHitPlant(Zombies*,Plants*)));
     sunflowerTimer = new QTimer(this);
     sunflowerTimer->start(100);
     this->connect(this->sunflowerTimer,SIGNAL(timeout()),this,SLOT(sunFlowerSun()));
+    connect(this,SIGNAL(zombieAttack(Zombies*,Plants*)),this,SLOT(zombieHitPlant(Zombies*,Plants*)));
     connect(this,SIGNAL(plantAttack(Zombies*,Plants*)),this,SLOT(plantShootZombie(Zombies*,Plants*)));
+    connect(this,SIGNAL(lawnmowerAttack(Zombies*)),this,SLOT(moveLawnmower(Zombies*)));
+//    moveLawnmower = new QTimer(this);
+//    connect(moveLawnmower,SIGNAL(timeout()),scene1,SLOT(advance()));
 }
 
 
@@ -95,6 +98,17 @@ int GameDisplay::getRows(int i)
     return 0;
 }
 
+int GameDisplay::zombiesInfrontOfPlants(Plants *plant)
+{
+    int counter=0;
+    for(int i=0;i<zombieVector.size();i++)
+    {
+        if(zombieVector[i]->getX()>=plant->getX()&&zombieVector[i]->getY()==plant->getY())
+            counter++;
+    }
+    return counter;
+}
+
 void GameDisplay::setLevel(int i)
 {
     QPen grid=QPen(Qt::black);
@@ -109,7 +123,6 @@ void GameDisplay::setLevel(int i)
    switch(i)
    {
    case 1:
-       scene()->addPixmap(QPixmap(homePath.currentPath()+"/icons/lawnmower.png"))->setPos(0,200);
        for(int column=90;column<900;column+=90)
        {
            scene1->addRect(column,0,90,100,grid,dirt);
@@ -131,11 +144,11 @@ void GameDisplay::setLevel(int i)
        {
            scene1->addRect(column,400,90,100,grid,dirt);
        }
+       l = new Lawnmower(0,200);
+       lawnmowerVector.push_back(l);
+       scene()->addItem(l);
        break;
    case 3:
-       scene()->addPixmap(QPixmap(homePath.currentPath()+"/icons/lawnmower.png"))->setPos(0,100);
-       scene()->addPixmap(QPixmap(homePath.currentPath()+"/icons/lawnmower.png"))->setPos(0,200);
-       scene()->addPixmap(QPixmap(homePath.currentPath()+"/icons/lawnmower.png"))->setPos(0,300);
        for(int column=90;column<900;column+=90)
        {
            scene1->addRect(column,0,90,100,grid,dirt);
@@ -156,13 +169,17 @@ void GameDisplay::setLevel(int i)
        {
            scene1->addRect(column,400,90,100,grid,dirt);
        }
+       l = new Lawnmower(0,100);
+       lawnmowerVector.push_back(l);
+       scene()->addItem(l);
+       l = new Lawnmower(0,200);
+       lawnmowerVector.push_back(l);
+       scene()->addItem(l);
+       l = new Lawnmower(0,300);
+       lawnmowerVector.push_back(l);
+       scene()->addItem(l);
        break;
    case 5:
-       scene()->addPixmap(QPixmap(homePath.currentPath()+"/icons/lawnmower.png"))->setPos(0,0);
-       scene()->addPixmap(QPixmap(homePath.currentPath()+"/icons/lawnmower.png"))->setPos(0,100);
-       scene()->addPixmap(QPixmap(homePath.currentPath()+"/icons/lawnmower.png"))->setPos(0,200);
-       scene()->addPixmap(QPixmap(homePath.currentPath()+"/icons/lawnmower.png"))->setPos(0,300);
-       scene()->addPixmap(QPixmap(homePath.currentPath()+"/icons/lawnmower.png"))->setPos(0,400);
        for(int column=90;column<900;column+=90)
        {
            scene1->addRect(column,0,90,100,grid,grass);
@@ -183,6 +200,21 @@ void GameDisplay::setLevel(int i)
        {
            scene1->addRect(column,400,90,100,grid,grass);
        }
+       l = new Lawnmower(0,0);
+       lawnmowerVector.push_back(l);
+       scene()->addItem(l);
+       l = new Lawnmower(0,100);
+       lawnmowerVector.push_back(l);
+       scene()->addItem(l);
+       l = new Lawnmower(0,200);
+       lawnmowerVector.push_back(l);
+       scene()->addItem(l);
+       l = new Lawnmower(0,300);
+       lawnmowerVector.push_back(l);
+       scene()->addItem(l);
+       l = new Lawnmower(0,400);
+       lawnmowerVector.push_back(l);
+       scene()->addItem(l);
        break;
    }
    setGridFromLevel();
@@ -191,6 +223,11 @@ void GameDisplay::setLevel(int i)
 bool GameDisplay::cellEmpty(int x, int y)
 {
     return grid[y/100][x/90];
+}
+
+void GameDisplay::advance(int phase)
+{
+
 }
 
 void GameDisplay::zombieHitPlant(Zombies *zombie, Plants *plant)
@@ -205,6 +242,7 @@ void GameDisplay::zombieHitPlant(Zombies *zombie, Plants *plant)
             plant->setPosition(-1,-1);
             plant->setStatus(true);
             scene()->removeItem(plant);
+            zombie->setMovement(true);
         }
     }
     zombieAttackDelay++;
@@ -214,9 +252,8 @@ void GameDisplay::plantShootZombie(Zombies *zombie, Plants *plant)
 {
     if(plant->getLife()>0)
     {
-    if(plantAttackDelay%50==0&&plant->okayToShoot())
+    if(plantAttackDelay%(40/**zombiesInfrontOfPlants(plant)*/)==0)
     {
-//        plant->setOkayToShoot(false);
         b = new Bullets(plant->getType(),plant->getX(),plant->getY());
         bulletVector.push_back(b);
         scene()->addItem(b);
@@ -234,7 +271,6 @@ void GameDisplay::plantShootZombie(Zombies *zombie, Plants *plant)
         }
         if(zombie->getLife()<=0)
         {
-            plant->setOkayToShoot(true);
             scene()->removeItem(zombie);
             zombie->setPosition(-1,-1);
             for(int n=0;n<bulletVector.size();n++)
@@ -246,8 +282,6 @@ void GameDisplay::plantShootZombie(Zombies *zombie, Plants *plant)
                 }
             }
         }
-
-
     }
     }
     scene()->update();
@@ -457,6 +491,14 @@ void GameDisplay::dropSun()
     s = new Sun(xCoord,yCoord,homePath.currentPath()+"/icons/sun.png",1);
     sunVector.push_back(s);
     scene()->addItem(s);
+    for(int i=0;i<lawnmowerVector.size();i++)
+    {
+        if(lawnmowerVector[i]->getX()==800)
+        {
+            lawnmowerVector[i]->setPosition(-1,-1);
+            scene()->removeItem(lawnmowerVector[i]);
+        }
+    }
 }
 
 void GameDisplay::sunFlowerSun()
@@ -512,6 +554,11 @@ void GameDisplay::moveZombiesAndPlants()
 {
     for(int i=0;i<zombieVector.size();i++)
     {
+        if(zombieVector[i]->getX()<0&&zombieVector[i]->getY()!=-1)
+        {
+            std::cout<<"hi"<<std::endl;
+            emit lawnmowerAttack(zombieVector[i]);
+        }
         for(int n=0;n<plantVector.size();n++)
         {
             if(zombieVector[i]->getX()!=-1&&plantVector[n]->getX()!=-1)
@@ -537,31 +584,50 @@ void GameDisplay::moveZombiesAndPlants()
                 }
                 if(zombieVector[i]->getX()==plantVector[n]->getX()&&zombieVector[i]->getY()==plantVector[n]->getY()&&plantVector[n]->getType()==5)
                 {
+                    grid[plantVector[n]->getY()/100][plantVector[n]->getX()/90]=true;
                     plantVector[n]->setPosition(-1,-1);
                     zombieVector[i]->setPosition(-1,-1);
                     scene()->removeItem(plantVector[n]);
                     scene()->removeItem(zombieVector[i]);
                 }
-                if(zombieVector[i]->getX()==plantVector[n]->getX()&&zombieVector[i]->getY()==plantVector[n]->getY()&&plantVector[n]->getType()==3)
+  //cherry bomb activates based on zombie            // if(zombieVector[i]->getX()==plantVector[n]->getX()&&zombieVector[i]->getY()==plantVector[n]->getY()&&plantVector[n]->getType()==3)
+                if(plantVector[n]->getType()==3)
                 {
                     for(int m=0;m<zombieVector.size();m++)
                     {
-                        if((zombieVector[m]->getX()>=plantVector[n]->getX()-90)&&(zombieVector[m]->getX()<=plantVector[n]->getX()+180)&&(zombieVector[m]->getY()>plantVector[n]->getY()-100)&&(zombieVector[m]->getY()<=plantVector[n]->getY()+200))
+                        if((zombieVector[m]->getX()>=plantVector[n]->getX()-90)&&(zombieVector[m]->getX()<plantVector[n]->getX()+180)&&(zombieVector[m]->getY()>=plantVector[n]->getY()-100)&&(zombieVector[m]->getY()<plantVector[n]->getY()+200))
                         {
                             zombieVector[m]->setPosition(-1,-1);
                             scene()->removeItem(zombieVector[m]);
                         }
                     }
+                    grid[plantVector[n]->getY()/100][plantVector[n]->getX()/90]=true;
                     plantVector[n]->setPosition(-1,-1);
                     scene()->removeItem(plantVector[n]);
-                }
+                }                
 
             }
+
         }
         zombieVector[i]->slideZombie();
         scene()->update();
-    }
 
+    }
+//MOVING THE LAWNMOWERS
+//    for(int i=0;i<zombieVector.size();i++)
+//    {
+//        for(int n=0;n<lawnmowerVector.size();n++)
+//        {
+//            if(zombieVector[i]->getX()==lawnmowerVector[n]->getX()&&zombieVector[i]->getY()==lawnmowerVector[n]->getY())
+//            {
+//                while(lawnmowerVector[n]->getX()!=800)
+//                {
+//                    moveLawnmower->start(500);
+//                    scene()->update();
+//                }
+//            }
+//        }
+//    }
     for(int i=0;i<sunVector.size();i++)
     {
         if(sunVector[i]->getType()==1)
@@ -571,4 +637,27 @@ void GameDisplay::moveZombiesAndPlants()
         }
     }
 
+}
+
+void GameDisplay::moveLawnmower(Zombies *zombie)
+{
+    for(int i=0;i<lawnmowerVector.size();i++)
+    {
+        if(lawnmowerVector[i]->getX()>zombie->getX()&&lawnmowerVector[i]->getY()==zombie->getY())
+        {
+            lawnmowerVector[i]->slideLawnmower();
+            for(int n=0;n<zombieVector.size();n++)
+            {
+                if(zombieVector[n]->getY()==lawnmowerVector[i]->getY())
+                {
+                    zombieVector[n]->setPosition(-1,-1);
+                    scene()->removeItem(zombieVector[n]);
+
+                }
+            }
+            return;
+        }
+
+    }
+    scene()->addPixmap(homePath.currentPath()+"/icons/youlose.png");
 }

@@ -20,7 +20,8 @@ SOURCES += main.cpp\
     plants.cpp \
     zombies.cpp \
     sun.cpp \
-    bullets.cpp
+    bullets.cpp \
+    lawnmower.cpp
 
 HEADERS  += mainwindow.h \
     usermanagement.h \
@@ -29,6 +30,7 @@ HEADERS  += mainwindow.h \
     plants.h \
     zombies.h \
     sun.h \
-    bullets.h
+    bullets.h \
+    lawnmower.h
 
 FORMS    += mainwindow.ui
