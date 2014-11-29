@@ -26,6 +26,8 @@ Plants::Plants(int type, int xPos, int yPos)
     plantSun=false;
     shootZombie=false;
     dead=false;
+    attackRate.start();
+
     if(type==1)
     {
         plantPicture=file.currentPath()+"/icons/peashooter1.png";
@@ -154,6 +156,7 @@ Plants::Plants(int type, int xPos, int yPos)
         seeding=7.5;
         sun=0;
         need=0;
+        chompZombie=true;
     }
     if(type==8)
     {
@@ -206,6 +209,11 @@ int Plants::getY()
     return yPos;
 }
 
+int Plants::getDamage()
+{
+    return damage;
+}
+
 int Plants::getType() const
 {
     return type;
@@ -226,6 +234,18 @@ bool Plants::getStatus()
     return dead;
 }
 
+bool Plants::okayToChomp()
+{
+    if(attackRate.elapsed()>42000)
+    {
+        chompZombie=true;
+        attackRate.restart();
+    }
+    else
+        chompZombie=false;
+    return chompZombie;
+}
+
 bool Plants::okayToPlant()
 {
 //    if(sunTimer%75==0)
@@ -242,6 +262,16 @@ bool Plants::okayToPlant()
     else
         plantSun=false;
     return plantSun;
+}
+
+int Plants::timeElapsed()
+{
+    return attackRate.elapsed();
+}
+
+void Plants::restartAttackRate()
+{
+    attackRate.restart();
 }
 
 void Plants::setStatus(bool status)

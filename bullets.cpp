@@ -26,6 +26,11 @@ int Bullets::getY()
     return yPos;
 }
 
+int Bullets::getType()
+{
+    return type;
+}
+
 int Bullets::getDamage()
 {
     return damage;

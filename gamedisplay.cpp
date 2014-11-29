@@ -18,6 +18,7 @@ GameDisplay::GameDisplay(QWidget *parent) :
     zombiesFinished=true;
     zombieAttackDelay=0;
     plantAttackDelay=20;
+    levelComplete=false;
     sunflowerTimer = new QTimer(this);
     sunflowerTimer->start(100);
     this->connect(this->sunflowerTimer,SIGNAL(timeout()),this,SLOT(sunFlowerSun()));
@@ -90,7 +91,7 @@ int GameDisplay::getRows(int i)
 {
     if(i==0)
         i++;
-    for(int n=0;n<userLevel.size();n++)
+    for(int n=0;n<levelLevel.size();n++)
     {
         if(i==levelLevel[n].toInt())
             return levelRows[n].toInt();
@@ -232,39 +233,44 @@ void GameDisplay::advance(int phase)
 
 void GameDisplay::zombieHitPlant(Zombies *zombie, Plants *plant)
 {
-    if(zombieAttackDelay%5==0)
+    if(plant->getLife()<=0)
     {
+        grid[plant->getY()/100][plant->getX()/90]=true;
+        plant->setPosition(-1,-1);
+        plant->setStatus(true);
+        scene()->removeItem(plant);
+        zombie->setMovement(true);
+    }
+    if(zombie->timeElapsed()>=500)
+    {
+        zombie->resetAttackRate();
         if(plant->getLife()!=0)
             plant->loseHealth(zombie->getAttack());
-        else
-        {
-            grid[plant->getY()/100][plant->getX()/90]=true;
-            plant->setPosition(-1,-1);
-            plant->setStatus(true);
-            scene()->removeItem(plant);
-            zombie->setMovement(true);
-        }
     }
-    zombieAttackDelay++;
+
 }
 
 void GameDisplay::plantShootZombie(Zombies *zombie, Plants *plant)
 {
     if(plant->getLife()>0)
     {
-    if(plantAttackDelay%(35/**zombiesInfrontOfPlants(plant)*/)==0)
+    if(plant->timeElapsed()>=1500)
     {
         b = new Bullets(plant->getType(),plant->getX(),plant->getY());
         bulletVector.push_back(b);
         scene()->addItem(b);
+        plant->restartAttackRate();
+
     }
-    plantAttackDelay++;
     for(int i=0;i<bulletVector.size();i++)
     {
         bulletVector[i]->slideBullet();
         if(zombie->inArea(bulletVector[i]->getX(),bulletVector[i]->getY())&&zombie->getLife()>0)
         {
-
+            if(bulletVector[i]->getType()==6)
+            {
+                zombie->loseSpeed();
+            }
             zombie->loseHealth(bulletVector[i]->getDamage());
             scene()->removeItem(bulletVector[i]);
             bulletVector[i]->setPosition(-1,-1);
@@ -284,7 +290,9 @@ void GameDisplay::plantShootZombie(Zombies *zombie, Plants *plant)
         }
     }
     }
+
     scene()->update();
+
 }
 
 void GameDisplay::timerTracking()
@@ -297,6 +305,35 @@ void GameDisplay::timerTracking()
             scene()->removeItem(sunVector[i]);
             sunVector[i]->setClicked();
         }
+    }
+
+    if(zombieVector.size()==levelSequenceNumber[getCurrentLevel()-1].size())
+    {
+        for(int i=0;i<zombieVector.size();i++)
+        {
+            if(zombieVector[i]->getLife()<=0)
+            {
+                levelComplete=true;
+            }
+            else
+            {
+                levelComplete=false;
+                break;
+            }
+         }
+    }
+    if(levelComplete)
+    {
+        zombieIndex=0;
+        zombiesFinished=true;
+        levelComplete=false;
+        zombieVector.clear();
+        plantVector.clear();
+        bulletVector.clear();
+        sunVector.clear();
+        lawnmowerVector.clear();
+        std::cout<<"hi from levelcomplete"<<std::endl;
+        emit startNextLevel();
     }
 }
 
@@ -565,11 +602,11 @@ void GameDisplay::spawnZombies()
 
 void GameDisplay::moveZombiesAndPlants()
 {
+
     for(int i=0;i<zombieVector.size();i++)
     {
         if(zombieVector[i]->getX()<0&&zombieVector[i]->getY()!=-1)
         {
-            std::cout<<"hi"<<std::endl;
             emit lawnmowerAttack(zombieVector[i]);
         }
         for(int n=0;n<plantVector.size();n++)
@@ -580,8 +617,6 @@ void GameDisplay::moveZombiesAndPlants()
                 {
                     zombieVector[i]->setMovement(false);
                     emit zombieAttack(zombieVector[i],plantVector[n]);
-                    //zombieHitPlant(zombieVector[i],plantVector[n]);
-
                 }
                 else
                 {
@@ -600,16 +635,18 @@ void GameDisplay::moveZombiesAndPlants()
                     grid[plantVector[n]->getY()/100][plantVector[n]->getX()/90]=true;
                     plantVector[n]->setPosition(-1,-1);
                     zombieVector[i]->setPosition(-1,-1);
+                    zombieVector[i]->loseHealth(plantVector[n]->getDamage());
                     scene()->removeItem(plantVector[n]);
                     scene()->removeItem(zombieVector[i]);
                 }
   //cherry bomb activates based on zombie            // if(zombieVector[i]->getX()==plantVector[n]->getX()&&zombieVector[i]->getY()==plantVector[n]->getY()&&plantVector[n]->getType()==3)
-                if(plantVector[n]->getType()==3)
+                if(plantVector[n]->getType()==3&&plantVector[n]->timeElapsed()>=1000)
                 {
                     for(int m=0;m<zombieVector.size();m++)
                     {
                         if((zombieVector[m]->getX()>=plantVector[n]->getX()-90)&&(zombieVector[m]->getX()<plantVector[n]->getX()+180)&&(zombieVector[m]->getY()>=plantVector[n]->getY()-100)&&(zombieVector[m]->getY()<plantVector[n]->getY()+200))
                         {
+                            zombieVector[m]->loseHealth(plantVector[n]->getDamage());
                             zombieVector[m]->setPosition(-1,-1);
                             scene()->removeItem(zombieVector[m]);
                         }
@@ -617,14 +654,25 @@ void GameDisplay::moveZombiesAndPlants()
                     grid[plantVector[n]->getY()/100][plantVector[n]->getX()/90]=true;
                     plantVector[n]->setPosition(-1,-1);
                     scene()->removeItem(plantVector[n]);
-                }                
+                }
+                if(zombieVector[i]->getX()==plantVector[n]->getX()&&zombieVector[i]->getY()==plantVector[n]->getY()&&plantVector[n]->getType()==7)
+                {
+                    if(plantVector[n]->okayToChomp())
+                    {
+                        zombieVector[i]->loseHealth(plantVector[n]->getDamage());
+                        if(zombieVector[i]->getLife()<=0)
+                        {
+                            zombieVector[i]->setPosition(-1,-1);
+                            scene()->removeItem(zombieVector[i]);
+                        }
 
+                    }
+                }
             }
 
         }
         zombieVector[i]->slideZombie();
         scene()->update();
-
     }
 //MOVING THE LAWNMOWERS
 //    for(int i=0;i<zombieVector.size();i++)
@@ -663,6 +711,7 @@ void GameDisplay::moveLawnmower(Zombies *zombie)
             {
                 if(zombieVector[n]->getY()==lawnmowerVector[i]->getY())
                 {
+                    zombieVector[n]->loseHealth(zombieVector[n]->getLife());
                     zombieVector[n]->setPosition(-1,-1);
                     scene()->removeItem(zombieVector[n]);
 

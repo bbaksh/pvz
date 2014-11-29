@@ -16,6 +16,8 @@ public:
     void setCurrentUser();
     void updateCurrentUser(QString name);
     int getCurrentLevel();
+    void setCurrentLevel();
+    void setLevelForEndGame();
 };
 
 #endif // GAMEPLAY_H

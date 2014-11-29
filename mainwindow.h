@@ -28,14 +28,15 @@ protected:
 
 private slots:
 
+   void updateSunLabel();
+
+   void setupNextLevel();
 
    void on_newButton_clicked();
 
    void on_deleteButton_clicked();
 
    void on_quitButton_clicked();
-
-
 
    void on_userButton_activated(const QString &arg1);
 
@@ -44,8 +45,6 @@ private slots:
    void on_plant1Button_clicked();
 
    void on_restartButton_clicked();
-
-   void updateSunLabel();
 
    void on_plant2Button_clicked();
 

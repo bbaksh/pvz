@@ -11,6 +11,7 @@ public:
     Bullets(int type,int xPos, int yPos);
     int getX();
     int getY();
+    int getType();
     int getDamage();
     void setPosition(int x, int y);
     void slideBullet();

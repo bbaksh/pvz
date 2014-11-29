@@ -4,6 +4,7 @@
 #include <QPainter>
 #include <QGraphicsPixmapItem>
 #include <QDir>
+#include <QTime>
 
 
 class Zombies : public QGraphicsPixmapItem
@@ -20,6 +21,8 @@ private:
     bool keepMoving;
     QDir file;
     QPixmap zombiePicture;
+    QTime attackRate;
+    int alteredSpeed;
 protected:
 public:
     Zombies();
@@ -30,7 +33,11 @@ public:
     int getAttack() const;
     void loseHealth(int damage);
     void setMovement(bool x);
+    bool getMovement();
     void slideZombie();
+    void loseSpeed();
+    int timeElapsed();
+    void resetAttackRate();
     void setPosition(int xPos, int yPos);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     void advance(int phase);

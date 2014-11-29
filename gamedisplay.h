@@ -42,6 +42,7 @@ private:
     std::vector<Sun *>sunVector;
     std::vector<Bullets *>bulletVector;
     std::vector<Lawnmower *>lawnmowerVector;
+    bool levelComplete;
 
 public:
     explicit GameDisplay(QWidget *parent = 0);
@@ -60,12 +61,15 @@ public:
     void advance(int phase);
 
 
+
+
 signals:
     void mouse();
     void sunFlowerPlanted();
     void zombieAttack(Zombies *zombie,Plants *plant);
     void plantAttack(Zombies *zombie,Plants *plant);
     void lawnmowerAttack(Zombies *zombie);
+    void startNextLevel();
 public slots:
     void mousePressEvent(QMouseEvent *click);
     void dropSun();
@@ -76,7 +80,6 @@ public slots:
     void zombieHitPlant(Zombies *zombie,Plants *plant);
     void plantShootZombie(Zombies *zombie,Plants *plant);
     void timerTracking();
-
 
 };
 

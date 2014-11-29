@@ -42,18 +42,16 @@ MainWindow::MainWindow(QWidget *parent) :
 
     timer = new QTimer(this);
     this->connect(timer, SIGNAL(timeout()), pvz, SLOT(dropSun()));
-
     updateSuns = new QTimer(this);
     this->connect(updateSuns,SIGNAL(timeout()),this,SLOT(updateSunLabel()));
-    this->connect(updateSuns,SIGNAL(timeout()),pvz,SLOT(timerTracking()));
-
-   // pvz->sunflowerTimer = new QTimer(this);
 
     zombieTimer = new QTimer(this);
     this->connect(zombieTimer,SIGNAL(timeout()),pvz,SLOT(spawnZombies()));
 
     animateZombie = new QTimer(this);
     this->connect(animateZombie,SIGNAL(timeout()),pvz,SLOT(moveZombiesAndPlants()));
+    this->connect(animateZombie,SIGNAL(timeout()),pvz,SLOT(timerTracking()));
+    this->connect(pvz,SIGNAL(startNextLevel()),this,SLOT(setupNextLevel()));
    //this->connect(pvz->sunflowerTimer,SIGNAL(timeout()),pvz,SLOT(sunFlowerSun()));
    // this->connect(&(this->pvz),SIGNAL(mouse()),this,SLOT(handleclick(QEvent*)));
 
@@ -254,6 +252,44 @@ void MainWindow::updateSunLabel()
 {
     ui->pointsDisplay->setText(QString::number(pvz->getSunPoints()));
     ui->graphicsView->scene()->update();
+}
+
+void MainWindow::setupNextLevel()
+{
+    std::cout<<"hi from setupnextlevel"<<std::endl;
+    timer->stop();
+    updateSuns->stop();
+    zombieTimer->stop();
+    animateZombie->stop();
+    pvz->setCurrentLevel();
+    if(pvz->getCurrentLevel()==9)
+    {
+
+       pvz->setLevelForEndGame();
+       pvz->scene1->clear();
+       ui->levelDisplay->setNum(pvz->getCurrentLevel());
+       ui->pointsDisplay->setText(QString::number(pvz->getSunPoints()));
+       pvz->scene1->addPixmap(pvz->mainScreen());
+       ui->graphicsView->adjustSize();
+       ui->graphicsView->scene()->update();
+       QMessageBox wonTheGame;
+       wonTheGame.setText("CONGRATULATIONS!\nYOU HAVE WON THE GAME!");
+       QAbstractButton *okayButton =wonTheGame.addButton(tr("Yeah! I'm Awesome!"),QMessageBox::ActionRole);
+       wonTheGame.exec();
+    }
+    else
+    {
+    pvz->scene1->clear();
+    pvz->setLevel(pvz->getRows(pvz->getCurrentLevel()));
+    ui->levelDisplay->setNum(pvz->getCurrentLevel());
+    ui->pointsDisplay->setText(QString::number(pvz->getSunPoints()));
+    ui->graphicsView->scene()->update();
+    updateSuns->start(20);
+    timer->start(10000);//10000ms is 10 seconds
+    zombieTimer->start(2000);
+    animateZombie->start(25);
+    }
+
 }
 
 void MainWindow::on_plant1Button_clicked()

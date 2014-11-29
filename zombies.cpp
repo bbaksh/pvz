@@ -14,6 +14,8 @@ Zombies::Zombies()
 
 Zombies::Zombies(int type,int xPos,int yPos)
 {
+    alteredSpeed=2;
+    attackRate.start();
     this->type=type;
     this->xPos=xPos;
     this->yPos=yPos;
@@ -96,13 +98,33 @@ void Zombies::setMovement(bool x)
     keepMoving=x;
 }
 
+bool Zombies::getMovement()
+{
+    return keepMoving;
+}
+
 
 void Zombies::slideZombie()
 {
     if(keepMoving)
     {
-    xPos-=2;
+    xPos-=alteredSpeed;
     }
+}
+
+void Zombies::loseSpeed()
+{
+    alteredSpeed=1;
+}
+
+int Zombies::timeElapsed()
+{
+    return attackRate.elapsed();
+}
+
+void Zombies::resetAttackRate()
+{
+    attackRate.restart();
 }
 
 void Zombies::setPosition(int xPos, int yPos)

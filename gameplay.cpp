@@ -58,3 +58,24 @@ int GamePlay::getCurrentLevel()
     return currentUser[2].toInt();
 }
 
+void GamePlay::setCurrentLevel()
+{
+    sunPoints=100;
+    userLevel[getIndex()]=QString::number(userLevel[getIndex()].toInt()+1);
+//    if(userLevel[getIndex()].toInt()==9)
+//    {
+//          userLevel[getIndex()]=QString::number(1);
+//    }
+    setCurrentUser();
+}
+
+void GamePlay::setLevelForEndGame()
+{
+    sunPoints=100;
+    if(userLevel[getIndex()].toInt()==9)
+    {
+          userLevel[getIndex()]=QString::number(1);
+    }
+    setCurrentUser();
+}
+

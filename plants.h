@@ -34,7 +34,9 @@ protected:
     bool dead;
     bool plantSun;
     bool shootZombie;
+    bool chompZombie;
     QTime sunSpawn;
+    QTime attackRate;
 public:
     Plants();
     Plants(int type, int xPos, int yPos);
@@ -44,11 +46,15 @@ public:
     void loseHealth(int attack);
     int getX();
     int getY();
+    int getDamage();
     int getType() const;
     bool okayToShoot();
     void setOkayToShoot(bool x);
     bool getStatus();
+    bool okayToChomp();
     bool okayToPlant();
+    int timeElapsed();
+    void restartAttackRate();
     void setStatus(bool status);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     void advance(int phase);
