@@ -252,7 +252,7 @@ void GameDisplay::plantShootZombie(Zombies *zombie, Plants *plant)
 {
     if(plant->getLife()>0)
     {
-    if(plantAttackDelay%(40/**zombiesInfrontOfPlants(plant)*/)==0)
+    if(plantAttackDelay%(35/**zombiesInfrontOfPlants(plant)*/)==0)
     {
         b = new Bullets(plant->getType(),plant->getX(),plant->getY());
         bulletVector.push_back(b);
@@ -287,6 +287,19 @@ void GameDisplay::plantShootZombie(Zombies *zombie, Plants *plant)
     scene()->update();
 }
 
+void GameDisplay::timerTracking()
+{
+    //SUN DISAPPEARING TIMERS
+    for(int i=0;i<sunVector.size();i++)
+    {
+        if(sunVector[i]->timeEllapsed()>7500&&sunVector[i]->getX()!=-1)
+        {
+            scene()->removeItem(sunVector[i]);
+            sunVector[i]->setClicked();
+        }
+    }
+}
+
 
 void GameDisplay::mousePressEvent(QMouseEvent *click)
 {
@@ -303,7 +316,7 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
         {
             for(int y=0;y<500;y+=100)
             {
-                if(click->x()>=x&&click->x()<=(x+90)&&click->y()>=y&&click->y()<=(y+100))
+                if(click->x()>x&&click->x()<(x+90)&&click->y()>y&&click->y()<(y+100))
                 {
                         p = new Plants(1,x,y);
                         plantVector.push_back(p);
@@ -324,7 +337,7 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
         {
             for(int y=0;y<500;y+=100)
             {
-                if(click->x()>=x&&click->x()<=(x+90)&&click->y()>=y&&click->y()<=(y+100))
+                if(click->x()>x&&click->x()<(x+90)&&click->y()>y&&click->y()<(y+100))
                 {
                         p = new Plants(2,x,y);
                         plantVector.push_back(p);
@@ -345,7 +358,7 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
         {
             for(int y=0;y<500;y+=100)
             {
-                if(click->x()>=x&&click->x()<=(x+90)&&click->y()>=y&&click->y()<=(y+100))
+                if(click->x()>x&&click->x()<(x+90)&&click->y()>y&&click->y()<(y+100))
                 {
                         p = new Plants(3,x,y);
                         plantVector.push_back(p);
@@ -366,7 +379,7 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
         {
             for(int y=0;y<500;y+=100)
             {
-                if(click->x()>=x&&click->x()<=(x+90)&&click->y()>=y&&click->y()<=(y+100))
+                if(click->x()>x&&click->x()<(x+90)&&click->y()>y&&click->y()<(y+100))
                 {
                         p = new Plants(4,x,y);
                         plantVector.push_back(p);
@@ -387,7 +400,7 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
         {
             for(int y=0;y<500;y+=100)
             {
-                if(click->x()>=x&&click->x()<=(x+90)&&click->y()>=y&&click->y()<=(y+100))
+                if(click->x()>x&&click->x()<(x+90)&&click->y()>y&&click->y()<(y+100))
                 {
                         p = new Plants(5,x,y);
                         plantVector.push_back(p);
@@ -408,7 +421,7 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
         {
             for(int y=0;y<500;y+=100)
             {
-                if(click->x()>=x&&click->x()<=(x+90)&&click->y()>=y&&click->y()<=(y+100))
+                if(click->x()>x&&click->x()<(x+90)&&click->y()>y&&click->y()<(y+100))
                 {
                         p = new Plants(6,x,y);
                         plantVector.push_back(p);
@@ -429,7 +442,7 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
             {
                 for(int y=0;y<500;y+=100)
                 {
-                    if(click->x()>=x&&click->x()<=(x+90)&&click->y()>=y&&click->y()<=(y+100))
+                    if(click->x()>x&&click->x()<(x+90)&&click->y()>y&&click->y()<(y+100))
                     {
                             p = new Plants(7,x,y);
                             plantVector.push_back(p);
@@ -450,7 +463,7 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
             {
                 for(int y=0;y<500;y+=100)
                 {
-                    if(click->x()>=x&&click->x()<=(x+90)&&click->y()>=y&&click->y()<=(y+100))
+                    if(click->x()>x&&click->x()<(x+90)&&click->y()>y&&click->y()<(y+100))
                     {
                             p = new Plants(8,x,y);
                             plantVector.push_back(p);

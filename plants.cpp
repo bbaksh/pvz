@@ -63,6 +63,7 @@ Plants::Plants(int type, int xPos, int yPos)
         sun=1;
         need=0;
         plantSun=true;
+        sunSpawn.start();
     }
     if(type==3)
     {
@@ -227,11 +228,19 @@ bool Plants::getStatus()
 
 bool Plants::okayToPlant()
 {
-    if(sunTimer%75==0)
+//    if(sunTimer%75==0)
+//        plantSun=true;
+//    else
+//        plantSun=false;
+//    sunTimer++;
+//    return plantSun;
+    if(sunSpawn.elapsed()>24000)
+    {
+        sunSpawn.restart();
         plantSun=true;
+    }
     else
         plantSun=false;
-    sunTimer++;
     return plantSun;
 }
 

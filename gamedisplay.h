@@ -75,6 +75,7 @@ public slots:
     void moveLawnmower(Zombies *zombie);
     void zombieHitPlant(Zombies *zombie,Plants *plant);
     void plantShootZombie(Zombies *zombie,Plants *plant);
+    void timerTracking();
 
 
 };

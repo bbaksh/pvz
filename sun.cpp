@@ -7,6 +7,7 @@ Sun::Sun()
 
 Sun::Sun(int x, int y,QString path,int type)
 {
+    disappear.start();
     if(type==1)
     {
     xPos=x;
@@ -14,9 +15,10 @@ Sun::Sun(int x, int y,QString path,int type)
     randomY=y;
     sunPicture=path;
     this->type=type;
+
     }
     else
-    {
+    {  
         xPos=x;
         yPos=y;
         randomY=0;
@@ -49,10 +51,12 @@ void Sun::setClicked()
 
 void Sun::slideSun()
 {
-    if(yPos!=randomY)
+    if(yPos<=randomY)
     {
-    yPos++;
+    yPos+=2;
+    disappear.restart();
     }
+
 }
 
 void Sun::advance(int phase)
@@ -81,7 +85,24 @@ bool Sun::areaY(int y)
             return true;
         }
     }
-   return false;
+    return false;
+}
+
+bool Sun::getDeleted()
+{
+    if(disappear.elapsed()>750)
+    {
+        return true;
+    }
+    else
+        return false;
+}
+
+int Sun::timeEllapsed()
+{
+    time=disappear.elapsed();
+    return (time);//-disappear.restart());
+
 }
 
 QPixmap Sun::getPicture()

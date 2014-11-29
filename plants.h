@@ -6,6 +6,7 @@
 #include <QPainter>
 #include <QTimer>
 #include <QGraphicsObject>
+#include <QTime>
 
 class Plants : public QGraphicsPixmapItem
 {
@@ -33,6 +34,7 @@ protected:
     bool dead;
     bool plantSun;
     bool shootZombie;
+    QTime sunSpawn;
 public:
     Plants();
     Plants(int type, int xPos, int yPos);

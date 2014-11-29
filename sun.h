@@ -3,7 +3,7 @@
 #include <iostream>
 #include <QPainter>
 #include <QPicture>
-
+#include <QTime>
 #include <QGraphicsItem>
 
 class Sun : public QGraphicsItem
@@ -15,6 +15,8 @@ private:
     QPixmap sunPicture;
     int type;
     int index;
+    QTime disappear;
+    int time;
 public:
     Sun();
     Sun(int x, int y,QString path,int type);
@@ -26,6 +28,8 @@ public:
     void advance(int phase);
     bool areaX(int x);
     bool areaY(int y);
+    bool getDeleted();
+    int timeEllapsed();
     QPixmap getPicture();
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
