@@ -2,7 +2,7 @@
 
 GamePlay::GamePlay()
 {
-    sunPoints=300000;
+    sunPoints=100;
 }
 
 void GamePlay::subtractSunPoints(int x)
@@ -27,9 +27,6 @@ void GamePlay::setCurrentUser()
     if(userTimestamp.size()>0)
     {
         double i=getIndex();
-//        currentUser.append(userTimestamp[i]);
-//        currentUser.append(userPlayer[i]);
-//        currentUser.append(userLevel[i]);
         currentUser[1]=userPlayer[i];
         currentUser[2]=userLevel[i];
         updateTimestamp(currentUser[1]);
@@ -42,9 +39,6 @@ void GamePlay::updateCurrentUser(QString name)
     if(userTimestamp.size()>0)
     {
         double i=getNameIndex(name);
-//        currentUser.append(userTimestamp[i]);
-//        currentUser.append(userPlayer[i]);
-//        currentUser.append(userLevel[i]);
         currentUser[1]=userPlayer[i];
         currentUser[2]=userLevel[i];
         updateTimestamp(currentUser[1]);
@@ -62,10 +56,6 @@ void GamePlay::setCurrentLevel()
 {
     sunPoints=100;
     userLevel[getIndex()]=QString::number(userLevel[getIndex()].toInt()+1);
-//    if(userLevel[getIndex()].toInt()==9)
-//    {
-//          userLevel[getIndex()]=QString::number(1);
-//    }
     setCurrentUser();
 }
 

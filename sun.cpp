@@ -25,7 +25,6 @@ Sun::Sun(int x, int y,QString path,int type)
         sunPicture=path;
         this->type=type;
     }
-    this->index=index;
 }
 
 int Sun::getX()
@@ -100,8 +99,7 @@ bool Sun::getDeleted()
 
 int Sun::timeEllapsed()
 {
-    time=disappear.elapsed();
-    return (time);//-disappear.restart());
+    return (disappear.elapsed());
 
 }
 
@@ -117,9 +115,6 @@ QRectF Sun::boundingRect() const
 
 void Sun::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-   // painter->setPen(QPen(Qt::black));
-    //painter->setBrush(QBrush(sunPicture));
     painter->drawPixmap(xPos,yPos,50,50,sunPicture);
-    //painter->boundingRect(xPos,yPos,50,50);
 
 }

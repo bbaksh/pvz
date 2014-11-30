@@ -15,23 +15,25 @@
 #include <QGraphicsScene>
 #include <QTimer>
 #include <iostream>
-
+#include <QTime>
 
 class GameDisplay : public QGraphicsView, public GamePlay
 {
     Q_OBJECT
 private:
-    QDir homePath;
-    int plantType;
-    bool grid[5][10];
     QPointF click;
+    QDir homePath;
+    QTime timeToRestart;
+    QTime cooldowns[8];
+
+    int plantType;
+    int zombieIndex;
+    bool zombiesFinished;
+    bool grid[5][10];
+    bool levelComplete;
+    bool restartLevel;
     double xCoord;
     double yCoord;
-    int sunFlowerIndex;
-    int zombieIndex;
-    int zombieAttackDelay;
-    int plantAttackDelay;
-    bool zombiesFinished;
     Plants *p;
     Zombies *z;
     Sun *s;
@@ -42,34 +44,31 @@ private:
     std::vector<Sun *>sunVector;
     std::vector<Bullets *>bulletVector;
     std::vector<Lawnmower *>lawnmowerVector;
-    bool levelComplete;
-
 public:
     explicit GameDisplay(QWidget *parent = 0);
     QGraphicsScene *scene1;
     QEvent *event;
     QMouseEvent *mouseEvent;
     QString mainScreen();
+    QTimer *sunflowerTimer;
+    int getRows(int i);
+    bool cellEmpty(int x, int y);
+    void advance();
     void setGridFromLevel();
     void setPlantType(const int i);
-    int getPlantType();
-    int getRows(int i);
-    int zombiesInfrontOfPlants(Plants *plant);
     void setLevel(int i);
-    bool cellEmpty(int x, int y);
-    QTimer *sunflowerTimer;
-    void advance(int phase);
-
-
+    void levelRestart();
+    int getCooldown(int i);
 
 
 signals:
-    void mouse();
     void sunFlowerPlanted();
     void zombieAttack(Zombies *zombie,Plants *plant);
     void plantAttack(Zombies *zombie,Plants *plant);
     void lawnmowerAttack(Zombies *zombie);
     void startNextLevel();
+    void startThisLevel();
+    void disableButton(int i);
 public slots:
     void mousePressEvent(QMouseEvent *click);
     void dropSun();

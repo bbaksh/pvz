@@ -9,7 +9,6 @@ Lawnmower::Lawnmower(int xPos, int yPos)
     this->xPos=xPos;
     this->yPos=yPos;
     lawnmowerPicture=file.currentPath()+"/icons/lawnmower.png";
-    slideTimer=0;
 }
 
 int Lawnmower::getX()
@@ -20,6 +19,11 @@ int Lawnmower::getX()
 int Lawnmower::getY()
 {
     return yPos;
+}
+
+int Lawnmower::timeElapsed()
+{
+    return disappear.elapsed();
 }
 
 void Lawnmower::setPosition(int x, int y)
@@ -35,12 +39,10 @@ void Lawnmower::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
 
 void Lawnmower::advance(int phase)
 {
-    //xPos=800;
 }
 
 void Lawnmower::slideLawnmower()
 {
-    //(slideTimer%1000==0)
     xPos=800;
-    //slideTimer++;
+    disappear.start();
 }

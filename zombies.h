@@ -10,6 +10,7 @@
 class Zombies : public QGraphicsPixmapItem
 {
 private:
+    int alteredSpeed;
     int type;
     int life;
     int equipment;
@@ -21,8 +22,7 @@ private:
     bool keepMoving;
     QDir file;
     QPixmap zombiePicture;
-    QTime attackRate;
-    int alteredSpeed;
+    QTime attackRate;  
 protected:
 public:
     Zombies();

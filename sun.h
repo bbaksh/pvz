@@ -12,11 +12,9 @@ private:
     int xPos;
     int yPos;
     int randomY;
-    QPixmap sunPicture;
     int type;
-    int index;
+    QPixmap sunPicture;
     QTime disappear;
-    int time;
 public:
     Sun();
     Sun(int x, int y,QString path,int type);

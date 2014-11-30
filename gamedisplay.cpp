@@ -4,6 +4,11 @@
 #include <iostream>
 #include <QGraphicsPixmapItem>
 
+int GameDisplay::getCooldown(int i)
+{
+    return cooldowns[i].elapsed();
+}
+
 GameDisplay::GameDisplay(QWidget *parent) :
     QGraphicsView(parent)
 {
@@ -13,27 +18,27 @@ GameDisplay::GameDisplay(QWidget *parent) :
     plantType=0;
     event=0;
     mouseEvent=0;
-    sunFlowerIndex=0;
     zombieIndex=0;
     zombiesFinished=true;
-    zombieAttackDelay=0;
-    plantAttackDelay=20;
     levelComplete=false;
+    restartLevel=false;
     sunflowerTimer = new QTimer(this);
     sunflowerTimer->start(100);
     this->connect(this->sunflowerTimer,SIGNAL(timeout()),this,SLOT(sunFlowerSun()));
     connect(this,SIGNAL(zombieAttack(Zombies*,Plants*)),this,SLOT(zombieHitPlant(Zombies*,Plants*)));
     connect(this,SIGNAL(plantAttack(Zombies*,Plants*)),this,SLOT(plantShootZombie(Zombies*,Plants*)));
     connect(this,SIGNAL(lawnmowerAttack(Zombies*)),this,SLOT(moveLawnmower(Zombies*)));
-//    moveLawnmower = new QTimer(this);
-//    connect(moveLawnmower,SIGNAL(timeout()),scene1,SLOT(advance()));
+    for(int i=0;i<8;i++)
+    {
+        cooldowns[i].start();
+    }
 }
 
 
 
 QString GameDisplay::mainScreen()
 {
-    QString screen(homePath.currentPath()+"/mainscreen3.png");
+    QString screen(homePath.currentPath()+"/mainscreen.png");
     return screen;
 }
 
@@ -79,12 +84,6 @@ void GameDisplay::setGridFromLevel()
 void GameDisplay::setPlantType(const int i)
 {
     plantType=i;
-        std::cout<<plantType<<std::endl;
-}
-
-int GameDisplay::getPlantType()
-{
-    return plantType;
 }
 
 int GameDisplay::getRows(int i)
@@ -99,17 +98,6 @@ int GameDisplay::getRows(int i)
     return 0;
 }
 
-int GameDisplay::zombiesInfrontOfPlants(Plants *plant)
-{
-    int counter=0;
-    for(int i=0;i<zombieVector.size();i++)
-    {
-        if(zombieVector[i]->getX()>=plant->getX()&&zombieVector[i]->getY()==plant->getY())
-            counter++;
-    }
-    return counter;
-}
-
 void GameDisplay::setLevel(int i)
 {
     QPen grid=QPen(Qt::black);
@@ -118,7 +106,7 @@ void GameDisplay::setLevel(int i)
     QBrush lawnmower(QColor(160,160,160));
     for(int row=0;row<500;row+=100)
     {
-        scene1->addRect(0,row,90,100,grid,lawnmower);
+        scene()->addRect(0,row,90,100,grid,lawnmower);
 
     }
    switch(i)
@@ -126,24 +114,24 @@ void GameDisplay::setLevel(int i)
    case 1:
        for(int column=90;column<900;column+=90)
        {
-           scene1->addRect(column,0,90,100,grid,dirt);
+           scene()->addRect(column,0,90,100,grid,dirt);
        }
        for(int column=90;column<900;column+=90)
        {
-           scene1->addRect(column,100,90,100,grid,dirt);
+           scene()->addRect(column,100,90,100,grid,dirt);
        }
        for(int column=90;column<900;column+=90)
        {
-           scene1->addRect(column,200,90,100,grid,grass);
+           scene()->addRect(column,200,90,100,grid,grass);
        }
 
        for(int column=90;column<900;column+=90)
        {
-           scene1->addRect(column,300,90,100,grid,dirt);
+           scene()->addRect(column,300,90,100,grid,dirt);
        }
        for(int column=90;column<900;column+=90)
        {
-           scene1->addRect(column,400,90,100,grid,dirt);
+           scene()->addRect(column,400,90,100,grid,dirt);
        }
        l = new Lawnmower(0,200);
        lawnmowerVector.push_back(l);
@@ -152,23 +140,23 @@ void GameDisplay::setLevel(int i)
    case 3:
        for(int column=90;column<900;column+=90)
        {
-           scene1->addRect(column,0,90,100,grid,dirt);
+           scene()->addRect(column,0,90,100,grid,dirt);
        }
        for(int column=90;column<900;column+=90)
        {
-           scene1->addRect(column,100,90,100,grid,grass);
+           scene()->addRect(column,100,90,100,grid,grass);
        }
        for(int column=90;column<900;column+=90)
        {
-           scene1->addRect(column,200,90,100,grid,grass);
+           scene()->addRect(column,200,90,100,grid,grass);
        }
        for(int column=90;column<900;column+=90)
        {
-           scene1->addRect(column,300,90,100,grid,grass);
+           scene()->addRect(column,300,90,100,grid,grass);
        }
        for(int column=90;column<900;column+=90)
        {
-           scene1->addRect(column,400,90,100,grid,dirt);
+           scene()->addRect(column,400,90,100,grid,dirt);
        }
        l = new Lawnmower(0,100);
        lawnmowerVector.push_back(l);
@@ -183,23 +171,23 @@ void GameDisplay::setLevel(int i)
    case 5:
        for(int column=90;column<900;column+=90)
        {
-           scene1->addRect(column,0,90,100,grid,grass);
+           scene()->addRect(column,0,90,100,grid,grass);
        }
        for(int column=90;column<900;column+=90)
        {
-           scene1->addRect(column,100,90,100,grid,grass);
+           scene()->addRect(column,100,90,100,grid,grass);
        }
        for(int column=90;column<900;column+=90)
        {
-           scene1->addRect(column,200,90,100,grid,grass);
+           scene()->addRect(column,200,90,100,grid,grass);
        }
        for(int column=90;column<900;column+=90)
        {
-           scene1->addRect(column,300,90,100,grid,grass);
+           scene()->addRect(column,300,90,100,grid,grass);
        }
        for(int column=90;column<900;column+=90)
        {
-           scene1->addRect(column,400,90,100,grid,grass);
+           scene()->addRect(column,400,90,100,grid,grass);
        }
        l = new Lawnmower(0,0);
        lawnmowerVector.push_back(l);
@@ -221,12 +209,24 @@ void GameDisplay::setLevel(int i)
    setGridFromLevel();
 }
 
+void GameDisplay::levelRestart()
+{
+    zombieIndex=0;
+    zombiesFinished=true;
+    levelComplete=false;
+    zombieVector.clear();
+    plantVector.clear();
+    bulletVector.clear();
+    sunVector.clear();
+    lawnmowerVector.clear();
+}
+
 bool GameDisplay::cellEmpty(int x, int y)
 {
     return grid[y/100][x/90];
 }
 
-void GameDisplay::advance(int phase)
+void GameDisplay::advance()
 {
 
 }
@@ -332,7 +332,6 @@ void GameDisplay::timerTracking()
         bulletVector.clear();
         sunVector.clear();
         lawnmowerVector.clear();
-        std::cout<<"hi from levelcomplete"<<std::endl;
         emit startNextLevel();
     }
 }
@@ -340,11 +339,6 @@ void GameDisplay::timerTracking()
 
 void GameDisplay::mousePressEvent(QMouseEvent *click)
 {
-    std::cout<<plantType<<std::endl;
-    emit mouse();
-    qDebug() << click->pos();
-    if(cellEmpty(click->x(),click->y()))
-    {
         switch(plantType)
         {
         case 1:
@@ -353,13 +347,15 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
         {
             for(int y=0;y<500;y+=100)
             {
-                if(click->x()>x&&click->x()<(x+90)&&click->y()>y&&click->y()<(y+100))
+                if(click->x()>x&&click->x()<(x+90)&&click->y()>y&&click->y()<(y+100)&&cellEmpty(click->x(),click->y()))
                 {
                         p = new Plants(1,x,y);
                         plantVector.push_back(p);
                         plantType=0;
                         subtractSunPoints(p->getCost());
                         scene()->addItem(p);
+                        cooldowns[0].restart();
+                        emit disableButton(1);
                         break;
                 }
 
@@ -374,13 +370,15 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
         {
             for(int y=0;y<500;y+=100)
             {
-                if(click->x()>x&&click->x()<(x+90)&&click->y()>y&&click->y()<(y+100))
+                if(click->x()>x&&click->x()<(x+90)&&click->y()>y&&click->y()<(y+100)&&cellEmpty(click->x(),click->y()))
                 {
                         p = new Plants(2,x,y);
                         plantVector.push_back(p);
                         plantType=0;
                         subtractSunPoints(p->getCost());
                         scene()->addItem(p);
+                        cooldowns[1].restart();
+                        emit disableButton(2);
                         break;
                 }
 
@@ -395,13 +393,15 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
         {
             for(int y=0;y<500;y+=100)
             {
-                if(click->x()>x&&click->x()<(x+90)&&click->y()>y&&click->y()<(y+100))
+                if(click->x()>x&&click->x()<(x+90)&&click->y()>y&&click->y()<(y+100)&&cellEmpty(click->x(),click->y()))
                 {
                         p = new Plants(3,x,y);
                         plantVector.push_back(p);
                         plantType=0;
                         subtractSunPoints(p->getCost());
                         scene()->addItem(p);
+                        cooldowns[2].restart();
+                        emit disableButton(3);
                         break;
                 }
 
@@ -416,13 +416,15 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
         {
             for(int y=0;y<500;y+=100)
             {
-                if(click->x()>x&&click->x()<(x+90)&&click->y()>y&&click->y()<(y+100))
+                if(click->x()>x&&click->x()<(x+90)&&click->y()>y&&click->y()<(y+100)&&cellEmpty(click->x(),click->y()))
                 {
                         p = new Plants(4,x,y);
                         plantVector.push_back(p);
                         plantType=0;
                         subtractSunPoints(p->getCost());
                         scene()->addItem(p);
+                        cooldowns[3].restart();
+                        emit disableButton(4);
                         break;
                 }
 
@@ -437,13 +439,15 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
         {
             for(int y=0;y<500;y+=100)
             {
-                if(click->x()>x&&click->x()<(x+90)&&click->y()>y&&click->y()<(y+100))
+                if(click->x()>x&&click->x()<(x+90)&&click->y()>y&&click->y()<(y+100)&&cellEmpty(click->x(),click->y()))
                 {
                         p = new Plants(5,x,y);
                         plantVector.push_back(p);
                         plantType=0;
                         subtractSunPoints(p->getCost());
                         scene()->addItem(p);
+                        cooldowns[4].restart();
+                        emit disableButton(5);
                         break;
                 }
 
@@ -458,13 +462,15 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
         {
             for(int y=0;y<500;y+=100)
             {
-                if(click->x()>x&&click->x()<(x+90)&&click->y()>y&&click->y()<(y+100))
+                if(click->x()>x&&click->x()<(x+90)&&click->y()>y&&click->y()<(y+100)&&cellEmpty(click->x(),click->y()))
                 {
                         p = new Plants(6,x,y);
                         plantVector.push_back(p);
                         plantType=0;
                         subtractSunPoints(p->getCost());
                         scene()->addItem(p);
+                        cooldowns[5].restart();
+                        emit disableButton(6);
                         break;
                 }
 
@@ -479,13 +485,15 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
             {
                 for(int y=0;y<500;y+=100)
                 {
-                    if(click->x()>x&&click->x()<(x+90)&&click->y()>y&&click->y()<(y+100))
+                    if(click->x()>x&&click->x()<(x+90)&&click->y()>y&&click->y()<(y+100)&&cellEmpty(click->x(),click->y()))
                     {
                             p = new Plants(7,x,y);
                             plantVector.push_back(p);
                             plantType=0;
                             subtractSunPoints(p->getCost());
                             scene()->addItem(p);
+                            cooldowns[6].restart();
+                            emit disableButton(7);
                             break;
                     }
 
@@ -500,21 +508,28 @@ void GameDisplay::mousePressEvent(QMouseEvent *click)
             {
                 for(int y=0;y<500;y+=100)
                 {
-                    if(click->x()>x&&click->x()<(x+90)&&click->y()>y&&click->y()<(y+100))
+                    for(int i=0;i<plantVector.size();i++)
                     {
+                        if(click->x()>x&&click->x()<(x+90)&&click->y()>y&&click->y()<(y+100)&&plantVector[i]->getType()==1&&plantVector[i]->getX()==x&&plantVector[i]->getY()==y)
+                        {
+                            plantVector[i]->setPosition(-1,-1);
+                            scene()->removeItem(plantVector[i]);
+
                             p = new Plants(8,x,y);
                             plantVector.push_back(p);
                             plantType=0;
                             subtractSunPoints(p->getCost());
                             scene()->addItem(p);
+                            cooldowns[7].restart();
+                            emit disableButton(8);
                             break;
+                        }
                     }
 
                 }
             }
             grid[click->y()/100][click->x()/90]=false;
             break;
-        }
         }
     }
     for(int i=0;i<sunVector.size();i++)
@@ -541,14 +556,7 @@ void GameDisplay::dropSun()
     s = new Sun(xCoord,yCoord,homePath.currentPath()+"/icons/sun.png",1);
     sunVector.push_back(s);
     scene()->addItem(s);
-    for(int i=0;i<lawnmowerVector.size();i++)
-    {
-        if(lawnmowerVector[i]->getX()==800)
-        {
-            lawnmowerVector[i]->setPosition(-1,-1);
-            scene()->removeItem(lawnmowerVector[i]);
-        }
-    }
+
 }
 
 void GameDisplay::sunFlowerSun()
@@ -603,6 +611,14 @@ void GameDisplay::spawnZombies()
 void GameDisplay::moveZombiesAndPlants()
 {
 
+    for(int i=0;i<lawnmowerVector.size();i++)
+    {
+        if(lawnmowerVector[i]->getX()==800&&lawnmowerVector[i]->timeElapsed()>=1500)
+        {
+            lawnmowerVector[i]->setPosition(-1,-1);
+            scene()->removeItem(lawnmowerVector[i]);
+        }
+    }
     for(int i=0;i<zombieVector.size();i++)
     {
         if(zombieVector[i]->getX()<0&&zombieVector[i]->getY()!=-1)
@@ -639,7 +655,6 @@ void GameDisplay::moveZombiesAndPlants()
                     scene()->removeItem(plantVector[n]);
                     scene()->removeItem(zombieVector[i]);
                 }
-  //cherry bomb activates based on zombie            // if(zombieVector[i]->getX()==plantVector[n]->getX()&&zombieVector[i]->getY()==plantVector[n]->getY()&&plantVector[n]->getType()==3)
                 if(plantVector[n]->getType()==3&&plantVector[n]->timeElapsed()>=1000)
                 {
                     for(int m=0;m<zombieVector.size();m++)
@@ -674,21 +689,6 @@ void GameDisplay::moveZombiesAndPlants()
         zombieVector[i]->slideZombie();
         scene()->update();
     }
-//MOVING THE LAWNMOWERS
-//    for(int i=0;i<zombieVector.size();i++)
-//    {
-//        for(int n=0;n<lawnmowerVector.size();n++)
-//        {
-//            if(zombieVector[i]->getX()==lawnmowerVector[n]->getX()&&zombieVector[i]->getY()==lawnmowerVector[n]->getY())
-//            {
-//                while(lawnmowerVector[n]->getX()!=800)
-//                {
-//                    moveLawnmower->start(500);
-//                    scene()->update();
-//                }
-//            }
-//        }
-//    }
     for(int i=0;i<sunVector.size();i++)
     {
         if(sunVector[i]->getType()==1)
@@ -722,4 +722,16 @@ void GameDisplay::moveLawnmower(Zombies *zombie)
 
     }
     scene()->addPixmap(homePath.currentPath()+"/icons/youlose.png");
+    if(!restartLevel)
+    {
+        timeToRestart.start();
+        restartLevel=true;
+    }
+    if(restartLevel&&timeToRestart.elapsed()>1000)
+    {
+        restartLevel=false;
+        levelRestart();
+        sunPoints=100;
+        emit startThisLevel();
+    }
 }

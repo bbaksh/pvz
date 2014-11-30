@@ -15,28 +15,16 @@ void UserManagement::readUserData(QString fileName)
         QStringList values;
         while(!data.isNull())
         {
-            values=data.split(":");
-            userTimestamp.append(values[0]);
-            if(nameValidation(values[1]))
+            if(data.contains(":"))
             {
-                userPlayer.append(values[1]);
-            }
-            else
-            {
-                userPlayer.append("");
-                players.remove();
-                userTimestamp.clear();
-                userPlayer.clear();
-                userLevel.clear();
-                saveUsers(fileName);
-                break;
-            }
-            if(levelValidation(values[2]))
-            {
-                userLevel.append(values[2]);
-            }
-            else
-            {
+                values=data.split(":");
+                userTimestamp.append(values[0]);
+                if(nameValidation(values[1]))
+                {
+                    userPlayer.append(values[1]);
+                }
+                else
+                {
                     userPlayer.append("");
                     players.remove();
                     userTimestamp.clear();
@@ -45,12 +33,49 @@ void UserManagement::readUserData(QString fileName)
                     saveUsers(fileName);
                     break;
                 }
-            data = reader.readLine();
+                if(levelValidation(values[2]))
+                {
+                    userLevel.append(values[2]);
+                }
+                else
+                {
+                        userPlayer.append("");
+                        players.remove();
+                        userTimestamp.clear();
+                        userPlayer.clear();
+                        userLevel.clear();
+                        saveUsers(fileName);
+                        break;
+                    }
+                data = reader.readLine();
+            }
+            else
+                break;
         }
         players.close();
     }
-
-
+    else
+    {
+//        userPlayer.append("");
+//        players.remove();
+//        userTimestamp.clear();
+//        userPlayer.clear();
+//        userLevel.clear();
+//        saveUsers(fileName);
+        userPlayer.append("");
+        userTimestamp.append("");
+        userLevel.append("");
+    }
+    if(userPlayer.size()==0)
+    {
+        userPlayer.append("");
+        userTimestamp.append("");
+        userLevel.append("");
+        QMessageBox invalidPlayerData;
+        invalidPlayerData.setText("Error! “pvz_players” has invalid player data!\nThe program will run with default settings.\nPlease create a new user.");
+        invalidPlayerData.setStandardButtons(QMessageBox::Ok);
+        invalidPlayerData.exec();
+    }
 }
 
 void UserManagement::readLevelData(QString fileName)
@@ -84,7 +109,9 @@ void UserManagement::readLevelData(QString fileName)
         levels.close();
     }
     else
+    {
         close=true;
+    }
 
 }
 
@@ -94,12 +121,28 @@ void UserManagement::createUser(QString name)
     userTimestamp.append(time);
     if(nameValidation(name))
     {
-        userPlayer.append(name);
+        QMessageBox invalidName;
+        invalidName.setText("Are you sure you want to create this user?");
+        QAbstractButton *okayButton =invalidName.addButton(QObject::tr("OKAY"),QMessageBox::ActionRole);
+        QAbstractButton *cancelButton =invalidName.addButton(QObject::tr("CANCEL"),QMessageBox::ActionRole);
+        invalidName.exec();
+        if(invalidName.clickedButton() == okayButton)
+        {
+            userPlayer.append(name);
+            userLevel.append("1");
+        }
+        if(invalidName.clickedButton()==cancelButton)
+        {
+            userPlayer.append("");
+            userLevel.append("");
+        }
     }
-    else userPlayer.append("");;
-    userLevel.append("1");
-    userSort();
-
+    else
+        {
+        userPlayer.append("");
+        userLevel.append("");
+        }
+        userSort();
 }
 
 void UserManagement::deleteUser(int index)
@@ -141,24 +184,22 @@ bool UserManagement::nameValidation(QString name)
 {
     name=name.toLower();
     bool valid=false;
-    if(name.size()<=10)
-    {
-        for(int i=0;i<name.size();i++)
-        {
-            if(name[i].isLetterOrNumber())
-                valid=true;
-            else
-            {
-                valid=false;
-                break;
-            }
-        }
-    }
-
-    if(valid==true)
-        return true;
-    else
-        return false;
+//    if(name.size()<10)
+//    {
+//        for(int i=0;i<name.size();i++)
+//        {
+//            if(name[i].isLetterOrNumber())
+//                valid=true;
+//            else
+//            {
+//                valid=false;
+//                break;
+//            }
+//        }
+//    }
+    if(name.size()<10)
+        valid=true;
+    return valid;
 }
 
 bool UserManagement::levelValidation(QString level)
@@ -220,8 +261,17 @@ QStringList UserManagement::userSort()
             {
                 if(sortedTimes[n-1]==userTimestamp[i])
                     if(userPlayer[i]!="NULL")
+                    {
                         sortedNames.append(userPlayer[i]);
+
+                    }
+                else
+                        break;
             }
+        }
+        while(sortedNames.size()>5)
+        {
+            sortedNames.pop_back();
         }
         return sortedNames;
     }

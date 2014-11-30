@@ -8,6 +8,8 @@
 #include <iostream>
 #include <QTimer>
 #include <time.h>
+#include <QTime>
+#include <QSpacerItem>
 
 namespace Ui {
 class MainWindow;
@@ -31,6 +33,8 @@ private slots:
    void updateSunLabel();
 
    void setupNextLevel();
+
+   void handleCooldown(int i);
 
    void on_newButton_clicked();
 
@@ -71,8 +75,10 @@ private:
     QTimer *zombieTimer;
     QTimer *animateZombie;
     QGraphicsPixmapItem *picture;
+    QTime plantButtons[8];
 signals:
     void mouseclick(QEvent *);
+    void levelsError();
 
 };
 

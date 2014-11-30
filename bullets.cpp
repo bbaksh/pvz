@@ -54,8 +54,6 @@ void Bullets::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, Q
 
 void Bullets::advance(int)
 {
-    //when function is called, the bullet object that is created will translate along the
-    //x axis. When there is a collision with a zombie, it will get deleted.
 }
 
 void Bullets::slideBullet()

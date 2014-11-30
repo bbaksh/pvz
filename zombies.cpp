@@ -31,6 +31,7 @@ Zombies::Zombies(int type,int xPos,int yPos)
     }
     if(this->type==2)
     {
+        alteredSpeed=1;
         life=10;
         equipment=0;
         attack=1;
@@ -40,7 +41,7 @@ Zombies::Zombies(int type,int xPos,int yPos)
     }
     if(this->type==3)
     {
-        life=10;
+        life=28;
         equipment=18;
         attack=1;
         rate=0.5;
@@ -49,7 +50,7 @@ Zombies::Zombies(int type,int xPos,int yPos)
     }
     if(this->type==4)
     {
-        life=10;
+        life=65;
         equipment=55;
         attack=1;
         rate=0.5;
@@ -58,7 +59,7 @@ Zombies::Zombies(int type,int xPos,int yPos)
     }
     if(this->type==5)
     {
-        life=8;
+        life=16;
         equipment=8;
         attack=1;
         rate=0.5;
@@ -91,6 +92,8 @@ int Zombies::getAttack() const
 void Zombies::loseHealth(int damage)
 {
     life=life-damage;
+    if(life<=8&&type==5)
+        alteredSpeed=1;
 }
 
 void Zombies::setMovement(bool x)

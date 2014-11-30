@@ -13,8 +13,8 @@ class Plants : public QGraphicsPixmapItem
 private:
     QDir file;
     QPixmap plantPicture;
-
-protected:
+    QTime sunSpawn;
+    QTime attackRate;
     int type;
     int cost;
     int life;
@@ -29,14 +29,10 @@ protected:
     int need;
     int xPos;
     int yPos;
-    int sunTimer;
-    int fireTimer;
     bool dead;
     bool plantSun;
     bool shootZombie;
     bool chompZombie;
-    QTime sunSpawn;
-    QTime attackRate;
 public:
     Plants();
     Plants(int type, int xPos, int yPos);
@@ -57,7 +53,6 @@ public:
     void restartAttackRate();
     void setStatus(bool status);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-    void advance(int phase);
 
 
 

@@ -3,6 +3,7 @@
 #include <QPainter>
 #include <QGraphicsPixmapItem>
 #include <QDir>
+#include <QTime>
 
 class Lawnmower: public QGraphicsPixmapItem
 {
@@ -11,12 +12,13 @@ private:
     QPixmap lawnmowerPicture;
     int xPos;
     int yPos;
-    int slideTimer;
+    QTime disappear;
 public:
     Lawnmower();
     Lawnmower(int xPos, int yPos);
     int getX();
     int getY();
+    int timeElapsed();
     void setPosition(int x, int y);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     void advance(int phase);

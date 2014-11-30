@@ -21,8 +21,6 @@ Plants::Plants()
 
 Plants::Plants(int type, int xPos, int yPos)
 {
-    fireTimer=1;
-    sunTimer=1;
     plantSun=false;
     shootZombie=false;
     dead=false;
@@ -248,12 +246,6 @@ bool Plants::okayToChomp()
 
 bool Plants::okayToPlant()
 {
-//    if(sunTimer%75==0)
-//        plantSun=true;
-//    else
-//        plantSun=false;
-//    sunTimer++;
-//    return plantSun;
     if(sunSpawn.elapsed()>24000)
     {
         sunSpawn.restart();
@@ -282,9 +274,4 @@ void Plants::setStatus(bool status)
 void Plants::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
         painter->drawPixmap(xPos,yPos,90,100,plantPicture);
-}
-
-void Plants::advance(int phase)
-{
-    setPosition(xPos,yPos);
 }
