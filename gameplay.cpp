@@ -22,7 +22,7 @@ int GamePlay::getSunPoints() const
     return sunPoints;
 }
 
-void GamePlay::setCurrentUser()
+void GamePlay::setCurrentUser()//gets the currently selected user from an index
 {
     if(userTimestamp.size()>0)
     {
@@ -34,7 +34,7 @@ void GamePlay::setCurrentUser()
     }
 }
 
-void GamePlay::updateCurrentUser(QString name)
+void GamePlay::updateCurrentUser(QString name)//used to save users and update there timestamps,levle etc
 {
     if(userTimestamp.size()>0)
     {
@@ -55,14 +55,14 @@ int GamePlay::getCurrentLevel()
 void GamePlay::setCurrentLevel()
 {
     sunPoints=100;
-    userLevel[getIndex()]=QString::number(userLevel[getIndex()].toInt()+1);
+    userLevel[getIndex()]=QString::number(userLevel[getIndex()].toInt()+1);//increase level after completetion
     setCurrentUser();
 }
 
 void GamePlay::setLevelForEndGame()
 {
     sunPoints=100;
-    if(userLevel[getIndex()].toInt()==9)
+    if(userLevel[getIndex()].toInt()==9)//checks to see if the level cycle should be restarted
     {
           userLevel[getIndex()]=QString::number(1);
     }

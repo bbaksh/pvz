@@ -60,12 +60,11 @@ void Sun::slideSun()
 
 void Sun::advance(int phase)
 {
-    std::cout<<"hi"<<std::endl;
 }
 
 bool Sun::areaX(int x)
 {
-    for(int i=0;i<50;i++)
+    for(int i=0;i<50;i++)//CHECKS IF MOUSE CLICK IS WITHIN THE 50X50 AREA
     {
         if(x==xPos+i)
         {
@@ -77,7 +76,7 @@ bool Sun::areaX(int x)
 
 bool Sun::areaY(int y)
 {
-    for(int i=0;i<50;i++)
+    for(int i=0;i<50;i++)//CHECKS IF MOUSE CLICK IS WITHIN THE 50X50 AREA
     {
         if(y==yPos+i)
         {
@@ -87,15 +86,6 @@ bool Sun::areaY(int y)
     return false;
 }
 
-bool Sun::getDeleted()
-{
-    if(disappear.elapsed()>750)
-    {
-        return true;
-    }
-    else
-        return false;
-}
 
 int Sun::timeEllapsed()
 {

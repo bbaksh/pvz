@@ -9,13 +9,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     pvz=ui->graphicsView;
     pvz->scene1=ui->graphicsView->scene();
-    loadButtons();
+    loadButtons();//loads the buttons at the beginning
     srand (time(NULL));
     ui->nameDisplay->setPlaceholderText("Please enter a name");
     userPathName=playersPath.currentPath()+"/pvz_players.csv";
     pvz->readUserData(playersPath.currentPath()+"/pvz_players.csv");
     pvz->readLevelData(levelsPath.currentPath()+"/pvz_levels.csv");
-    if(pvz->closeProgram())
+    if(pvz->closeProgram())//if an level error arises, let the user know
     {
         QMessageBox quit;
         quit.setText("Error! “pvz_levels.csv” not found!!\nThe program will run with default settings.");
@@ -25,6 +25,8 @@ MainWindow::MainWindow(QWidget *parent) :
     }
     else
         pvz->setCurrentUser();
+
+    //SETS UP WHAT BUTTONS ARE DISABLED BASED ON THE CURRENT USER INFORMATION
     if(pvz->getCurrentLevel()!=0)
     {
         ui->levelDisplay->setNum(pvz->getCurrentLevel());
@@ -43,6 +45,7 @@ MainWindow::MainWindow(QWidget *parent) :
         ui->restartButton->setDisabled(true);
         ui->quitButton->setDisabled(true);
     }
+    //SETS UP THE MAIN SCREEN TEXT AND INFORMATION
     ui->levelDisplay->setAlignment(Qt::AlignCenter);
     ui->pointsDisplay->setText(QString::number(pvz->getSunPoints()));
     ui->pointsDisplay->setAlignment(Qt::AlignCenter);
@@ -53,6 +56,7 @@ MainWindow::MainWindow(QWidget *parent) :
     pvz->scene1->addPixmap(pvz->mainScreen());
     ui->graphicsView->adjustSize();
 
+    //SETS UP NEW TIMERS TO HANDLE EVENTS AND CONNECTS THEM TO THE EVENTS
     timer = new QTimer(this);
     this->connect(timer, SIGNAL(timeout()), pvz, SLOT(dropSun()));
     updateSuns = new QTimer(this);
@@ -71,7 +75,7 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
 
-void MainWindow::loadButtons()
+void MainWindow::loadButtons()//SETS ICONS, TOOLTIPS, BUTTON STATUS
 {
     QSize plantIcon(50,50);
 
@@ -147,7 +151,18 @@ void MainWindow::quitProgram()
 MainWindow::~MainWindow()
 {
     delete ui;
-    pvz->saveUsers(userPathName);
+    pvz->saveUsers(userPathName);//SAVES USERS WHEN PROGRAM EXITS
+    //HANDLE MEMORY LEAKS AND DANGLING POINTERS
+    delete pvz;
+    pvz=0;
+    delete timer;
+    timer=0;
+    delete updateSuns;
+    updateSuns=0;
+    delete zombieTimer;
+    zombieTimer=0;
+    delete animateZombie;
+    animateZombie=0;
 }
 
 void MainWindow::on_newButton_clicked()
@@ -198,11 +213,13 @@ void MainWindow::on_deleteButton_clicked()
 
 void MainWindow::on_quitButton_clicked()
 {
+    //SETS UP A CUSTOM MESSAGE BOX WITH DESCRIPTION AND BUTTONS
     QMessageBox quit;
     QSpacerItem* spacer = new QSpacerItem(600, 250,QSizePolicy::Fixed, QSizePolicy::Fixed);//785
     QGridLayout* layout = (QGridLayout*)quit.layout();
     layout->addItem(spacer, 0, 0, 0, 0);
     quit.move(473,225);
+    //SETS THE GAME TO PAUSE
     timer->stop();
     updateSuns->stop();
     zombieTimer->stop();
@@ -215,10 +232,11 @@ void MainWindow::on_quitButton_clicked()
     quit.exec();
     if(quit.clickedButton() == okayButton)
     {
-        this->close();
+        this->close();//CLOSES PROGRAM WHEN SELECTED
     }
     if(quit.clickedButton()==cancelButton)
     {
+        //RESUMES PROGRAM WHEN CANCELED
         updateSuns->start(20);
         timer->start(10000);//10000ms is 10 seconds
         zombieTimer->start(20000);
@@ -239,6 +257,7 @@ void MainWindow::on_userButton_activated(const QString &arg1)
 
 void MainWindow::on_startButton_clicked()
 {
+    //SETS BUTTONS THAT SHOULD BE ACTIVE AND STARTS THE GAME TIMERS
     ui->userButton->setDisabled(true);
     ui->deleteButton->setDisabled(true);
     ui->nameDisplay->setDisabled(true);
@@ -267,11 +286,13 @@ void MainWindow::on_startButton_clicked()
 
 void MainWindow::on_restartButton_clicked()
 {
+    //SETS UP A CUSTOM MESSAGE BOX FOR RESTARTING
     QMessageBox restart;
     QSpacerItem* spacer = new QSpacerItem(600, 250,QSizePolicy::Fixed, QSizePolicy::Fixed);//785
     QGridLayout* layout = (QGridLayout*)restart.layout();
     layout->addItem(spacer, 0, 0, 0, 0);
     restart.move(473,225);
+    //PAUSES GAME
     timer->stop();
     updateSuns->stop();
     zombieTimer->stop();
@@ -280,7 +301,7 @@ void MainWindow::on_restartButton_clicked()
     QAbstractButton *okayButton =restart.addButton(tr("OKAY"),QMessageBox::ActionRole);
     QAbstractButton *cancelButton =restart.addButton(tr("CANCEL"),QMessageBox::ActionRole);
     restart.exec();
-    if(restart.clickedButton() == okayButton)
+    if(restart.clickedButton() == okayButton)//RESTARTS LEVEL IF SLECETED
     {
         pvz->levelRestart();
         pvz->scene1->clear();
@@ -293,7 +314,7 @@ void MainWindow::on_restartButton_clicked()
         zombieTimer->start(20000);
         animateZombie->start(20);
     }
-    if(restart.clickedButton()==cancelButton)
+    if(restart.clickedButton()==cancelButton)//RESUMES GAME AT CURRENT STATE
     {
         updateSuns->start(20);
         timer->start(10000);//10000ms is 10 seconds
@@ -304,8 +325,9 @@ void MainWindow::on_restartButton_clicked()
 
 void MainWindow::updateSunLabel()
 {
-    ui->pointsDisplay->setText(QString::number(pvz->getSunPoints()));
+    ui->pointsDisplay->setText(QString::number(pvz->getSunPoints()));//UPDATE SUNPOINT LABEL
     ui->graphicsView->scene()->update();
+    //UPDATES AND CONTROLS THE COOLDOWNS OF BUTTONS AND THERE STATUS BASED ON SUN POINTS
     if(pvz->getSunPoints()==0)
     {
             ui->plant1Button->setDisabled(true);
@@ -317,196 +339,167 @@ void MainWindow::updateSunLabel()
             ui->plant7Button->setDisabled(true);
             ui->plant8Button->setDisabled(true);
     }
-    if(pvz->getSunPoints()>=25&&pvz->getSunPoints()<50)
+    if(pvz->getSunPoints()>=25&&pvz->getSunPoints()<50) //UPDATES AND CONTROLS THE COOLDOWNS OF BUTTONS AND THERE STATUS BASED ON SUN POINTS
     {
+        if(pvz->getCooldown(4)>=30000)
+        {
+            ui->plant5Button->setDisabled(false);
+        }
             ui->plant1Button->setDisabled(true);
             ui->plant2Button->setDisabled(true);
             ui->plant3Button->setDisabled(true);
             ui->plant4Button->setDisabled(true);
-            ui->plant5Button->setDisabled(false);
             ui->plant6Button->setDisabled(true);
             ui->plant7Button->setDisabled(true);
             ui->plant8Button->setDisabled(true);
     }
-    if(pvz->getSunPoints()>=50&&pvz->getSunPoints()<100)
+    if(pvz->getSunPoints()>=50&&pvz->getSunPoints()<100) //UPDATES AND CONTROLS THE COOLDOWNS OF BUTTONS AND THERE STATUS BASED ON SUN POINTS
     {
+        if(pvz->getCooldown(1)>=7500)
+        {
+            ui->plant2Button->setDisabled(false);
+        }
+        if(pvz->getCooldown(3)>=30000)
+        {
+            ui->plant4Button->setDisabled(false);
+        }
+        if(pvz->getCooldown(4)>=30000)
+        {
+            ui->plant5Button->setDisabled(false);
+        }
             ui->plant1Button->setDisabled(true);
-            ui->plant2Button->setDisabled(false);
             ui->plant3Button->setDisabled(true);
-            ui->plant4Button->setDisabled(false);
-            ui->plant5Button->setDisabled(false);
             ui->plant6Button->setDisabled(true);
             ui->plant7Button->setDisabled(true);
             ui->plant8Button->setDisabled(true);
     }
-    if(pvz->getSunPoints()>=100&&pvz->getSunPoints()<150)
-    {
+    if(pvz->getSunPoints()>=100&&pvz->getSunPoints()<150) //UPDATES AND CONTROLS THE COOLDOWNS OF BUTTONS AND THERE STATUS BASED ON SUN POINTS
+    {    if(pvz->getCooldown(0)>=7500)
+        {
             ui->plant1Button->setDisabled(false);
+        }
+        if(pvz->getCooldown(1)>=7500)
+        {
             ui->plant2Button->setDisabled(false);
-            ui->plant3Button->setDisabled(true);
+        }
+        if(pvz->getCooldown(3)>=30000)
+        {
             ui->plant4Button->setDisabled(false);
+        }
+        if(pvz->getCooldown(4)>=30000)
+        {
             ui->plant5Button->setDisabled(false);
+        }
+            ui->plant3Button->setDisabled(true);
             ui->plant6Button->setDisabled(true);
             ui->plant7Button->setDisabled(true);
             ui->plant8Button->setDisabled(true);
     }
-    if(pvz->getSunPoints()>=150&&pvz->getSunPoints()<175)
-    {
+    if(pvz->getSunPoints()>=150&&pvz->getSunPoints()<175) //UPDATES AND CONTROLS THE COOLDOWNS OF BUTTONS AND THERE STATUS BASED ON SUN POINTS
+    {    if(pvz->getCooldown(0)>=7500)
+        {
             ui->plant1Button->setDisabled(false);
+        }
+        if(pvz->getCooldown(1)>=7500)
+        {
             ui->plant2Button->setDisabled(false);
+        }
+        if(pvz->getCooldown(2)>=50000)
+        {
             ui->plant3Button->setDisabled(false);
+        }
+        if(pvz->getCooldown(3)>=30000)
+        {
             ui->plant4Button->setDisabled(false);
+        }
+        if(pvz->getCooldown(4)>=30000)
+        {
             ui->plant5Button->setDisabled(false);
+        }
+        if(pvz->getCooldown(6)>=7500)
+        {
+            ui->plant7Button->setDisabled(false);
+        }
             ui->plant6Button->setDisabled(true);
-            ui->plant7Button->setDisabled(false);
             ui->plant8Button->setDisabled(true);
     }
-    if(pvz->getSunPoints()>=175&&pvz->getSunPoints()<200)
-    {
+    if(pvz->getSunPoints()>=175&&pvz->getSunPoints()<200) //UPDATES AND CONTROLS THE COOLDOWNS OF BUTTONS AND THERE STATUS BASED ON SUN POINTS
+    {    if(pvz->getCooldown(0)>=7500)
+        {
             ui->plant1Button->setDisabled(false);
+        }
+        if(pvz->getCooldown(1)>=7500)
+        {
             ui->plant2Button->setDisabled(false);
+        }
+        if(pvz->getCooldown(2)>=50000)
+        {
             ui->plant3Button->setDisabled(false);
+        }
+        if(pvz->getCooldown(3)>=30000)
+        {
             ui->plant4Button->setDisabled(false);
+        }
+        if(pvz->getCooldown(4)>=30000)
+        {
             ui->plant5Button->setDisabled(false);
+        }
+        if(pvz->getCooldown(5)>=7500)
+        {
             ui->plant6Button->setDisabled(false);
+        }
+        if(pvz->getCooldown(6)>=7500)
+        {
             ui->plant7Button->setDisabled(false);
+        }
             ui->plant8Button->setDisabled(true);
     }
-    if(pvz->getSunPoints()>=200)
-    {
+    if(pvz->getSunPoints()>=200) //UPDATES AND CONTROLS THE COOLDOWNS OF BUTTONS AND THERE STATUS BASED ON SUN POINTS
+    {    if(pvz->getCooldown(0)>=7500)
+        {
             ui->plant1Button->setDisabled(false);
+        }
+        if(pvz->getCooldown(1)>=7500)
+        {
             ui->plant2Button->setDisabled(false);
+        }
+        if(pvz->getCooldown(2)>=50000)
+        {
             ui->plant3Button->setDisabled(false);
+        }
+        if(pvz->getCooldown(3)>=30000)
+        {
             ui->plant4Button->setDisabled(false);
+        }
+        if(pvz->getCooldown(4)>=30000)
+        {
             ui->plant5Button->setDisabled(false);
+        }
+        if(pvz->getCooldown(5)>=7500)
+        {
             ui->plant6Button->setDisabled(false);
+        }
+        if(pvz->getCooldown(6)>=7500)
+        {
             ui->plant7Button->setDisabled(false);
+        }
+        if(pvz->getCooldown(7)>=7500)
+        {
             ui->plant8Button->setDisabled(false);
+        }
     }
-
-    if(pvz->getCooldown(0)>=7500)
-    {
-        ui->plant1Button->setDisabled(false);
-    }
-    if(pvz->getCooldown(1)>=7500)
-    {
-        ui->plant1Button->setDisabled(false);
-    }
-    if(pvz->getCooldown(2)>=50000)
-    {
-        ui->plant1Button->setDisabled(false);
-    }
-    if(pvz->getCooldown(3)>=30000)
-    {
-        ui->plant1Button->setDisabled(false);
-    }
-    if(pvz->getCooldown(4)>=30000)
-    {
-        ui->plant1Button->setDisabled(false);
-    }
-    if(pvz->getCooldown(5)>=7500)
-    {
-        ui->plant1Button->setDisabled(false);
-    }
-    if(pvz->getCooldown(6)>=7500)
-    {
-        ui->plant1Button->setDisabled(false);
-    }
-    if(pvz->getCooldown(7)>=7500)
-    {
-        ui->plant1Button->setDisabled(false);
-    }
-
-//    if(pvz->getSunPoints()>=25)
-//    {
-//    ui->plant1Button->setDisabled(true);
-//    ui->plant2Button->setDisabled(true);
-//    ui->plant3Button->setDisabled(true);
-//    ui->plant4Button->setDisabled(true);
-//    ui->plant5Button->setDisabled(false);
-//    ui->plant6Button->setDisabled(true);
-//    ui->plant7Button->setDisabled(true);
-//    ui->plant8Button->setDisabled(true);
-//    }
-//    if(pvz->getSunPoints()>=50)
-//    {
-//    ui->plant1Button->setDisabled(true);
-//    ui->plant2Button->setDisabled(false);
-//    ui->plant3Button->setDisabled(true);
-//    ui->plant4Button->setDisabled(false);
-//    ui->plant5Button->setDisabled(false);
-//    ui->plant6Button->setDisabled(true);
-//    ui->plant7Button->setDisabled(true);
-//    ui->plant8Button->setDisabled(true);
-//    }
-//    if(pvz->getSunPoints()>=100)
-//    {
-//    ui->plant1Button->setDisabled(false);
-//    ui->plant2Button->setDisabled(false);
-//    ui->plant3Button->setDisabled(true);
-//    ui->plant4Button->setDisabled(false);
-//    ui->plant5Button->setDisabled(false);
-//    ui->plant6Button->setDisabled(true);
-//    ui->plant7Button->setDisabled(true);
-//    ui->plant8Button->setDisabled(true);
-//    }
-//    if(pvz->getSunPoints()>=150)
-//    {
-//    ui->plant1Button->setDisabled(false);
-//    ui->plant2Button->setDisabled(false);
-//    ui->plant3Button->setDisabled(false);
-//    ui->plant4Button->setDisabled(false);
-//    ui->plant5Button->setDisabled(false);
-//    ui->plant6Button->setDisabled(true);
-//    ui->plant7Button->setDisabled(false);
-//    ui->plant8Button->setDisabled(true);
-//    }
-//    if(pvz->getSunPoints()>=175)
-//    {
-//    ui->plant1Button->setDisabled(false);
-//    ui->plant2Button->setDisabled(false);
-//    ui->plant3Button->setDisabled(false);
-//    ui->plant4Button->setDisabled(false);
-//    ui->plant5Button->setDisabled(false);
-//    ui->plant6Button->setDisabled(false);
-//    ui->plant7Button->setDisabled(false);
-//    ui->plant8Button->setDisabled(true);
-//    }
-//    if(pvz->getSunPoints()>=200)
-//    {
-//    ui->plant1Button->setDisabled(false);
-//    ui->plant2Button->setDisabled(false);
-//    ui->plant3Button->setDisabled(false);
-//    ui->plant4Button->setDisabled(false);
-//    ui->plant5Button->setDisabled(false);
-//    ui->plant6Button->setDisabled(false);
-//    ui->plant7Button->setDisabled(false);
-//    ui->plant8Button->setDisabled(false);
-//    }
-//    if(pvz->getSunPoints()<25)
-//    {
-//        ui->plant1Button->setDisabled(true);
-//        ui->plant2Button->setDisabled(true);
-//        ui->plant3Button->setDisabled(true);
-//        ui->plant4Button->setDisabled(true);
-//        ui->plant5Button->setDisabled(true);
-//        ui->plant6Button->setDisabled(true);
-//        ui->plant7Button->setDisabled(true);
-//        ui->plant8Button->setDisabled(true);
-//    }
-
-
 }
 
 
 void MainWindow::setupNextLevel()
 {
+    //STOP THE TIMERS
     timer->stop();
     updateSuns->stop();
     zombieTimer->stop();
     animateZombie->stop();
     pvz->setCurrentLevel();
-    if(pvz->getCurrentLevel()==9)
+    if(pvz->getCurrentLevel()==9)//CHECK TO SEE IF THE USER HAS WON THE GAME AND SET UP ACCORDINGLY
     {
 
        pvz->setLevelForEndGame();
@@ -526,7 +519,7 @@ void MainWindow::setupNextLevel()
        ui->newButton->setDisabled(false);
        ui->startButton->setDisabled(false);
     }
-    else
+    else//IF THE USER HASNT WON THE GAME, SET UP THE NEXT LEVEL AS REGULAR
     {
     pvz->scene1->clear();
     pvz->setLevel(pvz->getRows(pvz->getCurrentLevel()));
@@ -543,64 +536,66 @@ void MainWindow::setupNextLevel()
 
 void MainWindow::handleCooldown(int i)
 {
- switch(i)
- {
-     case 1:
+    //DISABLES THE BUTTONS BASED ON WHEN THEY WERE USED
+     switch(i)
      {
-        ui->plant1Button->setDisabled(true);
-        break;
+         case 1:
+         {
+            ui->plant1Button->setDisabled(true);
+            break;
+         }
+         case 2:
+         {
+             ui->plant2Button->setDisabled(true);
+             break;
+         }
+         case 3:
+         {
+             ui->plant3Button->setDisabled(true);
+             break;
+         }
+         case 4:
+         {
+             ui->plant4Button->setDisabled(true);
+             break;
+         }
+         case 5:
+         {
+             ui->plant5Button->setDisabled(true);
+             break;
+         }
+         case 6:
+         {
+             ui->plant6Button->setDisabled(true);
+             break;
+         }
+         case 7:
+         {
+             ui->plant7Button->setDisabled(true);
+             break;
+         }
+         case 8:
+         {
+             ui->plant8Button->setDisabled(true);
+             break;
+         }
      }
-     case 2:
-     {
-         ui->plant2Button->setDisabled(true);
-         break;
-     }
-     case 3:
-     {
-         ui->plant3Button->setDisabled(true);
-         break;
-     }
-     case 4:
-     {
-         ui->plant4Button->setDisabled(true);
-         break;
-     }
-     case 5:
-     {
-         ui->plant5Button->setDisabled(true);
-         break;
-     }
-     case 6:
-     {
-         ui->plant6Button->setDisabled(true);
-         break;
-     }
-     case 7:
-     {
-         ui->plant7Button->setDisabled(true);
-         break;
-     }
-     case 8:
-     {
-         ui->plant8Button->setDisabled(true);
-         break;
-     }
- }
 }
 
 void MainWindow::on_plant1Button_clicked()
 {
+    //ALLOWS YOU TO TRIGGER A PLANT IF YOU HAVE THE REQUIRED SUNPOINTS. ALSO SETS THE BUTTON TO BE SELECTED
     if(pvz->getSunPoints()>=100)
     {
-    pvz->setPlantType(1);
-    ui->plant1Button->setFlat(true);
-    ui->plant2Button->setFlat(false);
-    ui->plant3Button->setFlat(false);
-    ui->plant4Button->setFlat(false);
-    ui->plant5Button->setFlat(false);
-    ui->plant6Button->setFlat(false);
-    ui->plant7Button->setFlat(false);
-    ui->plant8Button->setFlat(false);
+        pvz->setPlantType(1);
+        ui->plant1Button->setFlat(true);
+        ui->plant2Button->setFlat(false);
+        ui->plant3Button->setFlat(false);
+        ui->plant4Button->setFlat(false);
+        ui->plant5Button->setFlat(false);
+        ui->plant6Button->setFlat(false);
+        ui->plant7Button->setFlat(false);
+        ui->plant8Button->setFlat(false);
 
     }
 
@@ -608,22 +603,24 @@ void MainWindow::on_plant1Button_clicked()
 
 void MainWindow::on_plant2Button_clicked()
 {
+    //ALLOWS YOU TO TRIGGER A PLANT IF YOU HAVE THE REQUIRED SUNPOINTS. ALSO SETS THE BUTTON TO BE SELECTED
     if(pvz->getSunPoints()>=50)
     {
-    pvz->setPlantType(2);
-    ui->plant1Button->setFlat(false);
-    ui->plant2Button->setFlat(true);
-    ui->plant3Button->setFlat(false);
-    ui->plant4Button->setFlat(false);
-    ui->plant5Button->setFlat(false);
-    ui->plant6Button->setFlat(false);
-    ui->plant7Button->setFlat(false);
-    ui->plant8Button->setFlat(false);
+        pvz->setPlantType(2);
+        ui->plant1Button->setFlat(false);
+        ui->plant2Button->setFlat(true);
+        ui->plant3Button->setFlat(false);
+        ui->plant4Button->setFlat(false);
+        ui->plant5Button->setFlat(false);
+        ui->plant6Button->setFlat(false);
+        ui->plant7Button->setFlat(false);
+        ui->plant8Button->setFlat(false);
     }
 }
 
 void MainWindow::on_plant3Button_clicked()
 {
+    //ALLOWS YOU TO TRIGGER A PLANT IF YOU HAVE THE REQUIRED SUNPOINTS. ALSO SETS THE BUTTON TO BE SELECTED
     if(pvz->getSunPoints()>=150)\
     {
     pvz->setPlantType(3);
@@ -640,6 +637,7 @@ void MainWindow::on_plant3Button_clicked()
 
 void MainWindow::on_plant4Button_clicked()
 {
+    //ALLOWS YOU TO TRIGGER A PLANT IF YOU HAVE THE REQUIRED SUNPOINTS. ALSO SETS THE BUTTON TO BE SELECTED
     if(pvz->getSunPoints()>=50)
     {
     pvz->setPlantType(4);
@@ -656,64 +654,68 @@ void MainWindow::on_plant4Button_clicked()
 
 void MainWindow::on_plant5Button_clicked()
 {
+    //ALLOWS YOU TO TRIGGER A PLANT IF YOU HAVE THE REQUIRED SUNPOINTS. ALSO SETS THE BUTTON TO BE SELECTED
     if(pvz->getSunPoints()>=25)
     {
-    pvz->setPlantType(5);
-    ui->plant1Button->setFlat(false);
-    ui->plant2Button->setFlat(false);
-    ui->plant3Button->setFlat(false);
-    ui->plant4Button->setFlat(false);
-    ui->plant5Button->setFlat(true);
-    ui->plant6Button->setFlat(false);
-    ui->plant7Button->setFlat(false);
-    ui->plant8Button->setFlat(false);
+        pvz->setPlantType(5);
+        ui->plant1Button->setFlat(false);
+        ui->plant2Button->setFlat(false);
+        ui->plant3Button->setFlat(false);
+        ui->plant4Button->setFlat(false);
+        ui->plant5Button->setFlat(true);
+        ui->plant6Button->setFlat(false);
+        ui->plant7Button->setFlat(false);
+        ui->plant8Button->setFlat(false);
     }
 }
 
 void MainWindow::on_plant6Button_clicked()
 {
+    //ALLOWS YOU TO TRIGGER A PLANT IF YOU HAVE THE REQUIRED SUNPOINTS. ALSO SETS THE BUTTON TO BE SELECTED
     if(pvz->getSunPoints()>=175)
     {
-    pvz->setPlantType(6);
-    ui->plant1Button->setFlat(false);
-    ui->plant2Button->setFlat(false);
-    ui->plant3Button->setFlat(false);
-    ui->plant4Button->setFlat(false);
-    ui->plant5Button->setFlat(false);
-    ui->plant6Button->setFlat(true);
-    ui->plant7Button->setFlat(false);
-    ui->plant8Button->setFlat(false);
+        pvz->setPlantType(6);
+        ui->plant1Button->setFlat(false);
+        ui->plant2Button->setFlat(false);
+        ui->plant3Button->setFlat(false);
+        ui->plant4Button->setFlat(false);
+        ui->plant5Button->setFlat(false);
+        ui->plant6Button->setFlat(true);
+        ui->plant7Button->setFlat(false);
+        ui->plant8Button->setFlat(false);
     }
 }
 
 void MainWindow::on_plant7Button_clicked()
 {
+    //ALLOWS YOU TO TRIGGER A PLANT IF YOU HAVE THE REQUIRED SUNPOINTS. ALSO SETS THE BUTTON TO BE SELECTED
     if(pvz->getSunPoints()>=150)
     {
-    pvz->setPlantType(7);
-    ui->plant1Button->setFlat(false);
-    ui->plant2Button->setFlat(false);
-    ui->plant3Button->setFlat(false);
-    ui->plant4Button->setFlat(false);
-    ui->plant5Button->setFlat(false);
-    ui->plant6Button->setFlat(false);
-    ui->plant7Button->setFlat(true);
-    ui->plant8Button->setFlat(false);
+        pvz->setPlantType(7);
+        ui->plant1Button->setFlat(false);
+        ui->plant2Button->setFlat(false);
+        ui->plant3Button->setFlat(false);
+        ui->plant4Button->setFlat(false);
+        ui->plant5Button->setFlat(false);
+        ui->plant6Button->setFlat(false);
+        ui->plant7Button->setFlat(true);
+        ui->plant8Button->setFlat(false);
     }
 }
 
 void MainWindow::on_plant8Button_clicked()
 {
+    //ALLOWS YOU TO TRIGGER A PLANT IF YOU HAVE THE REQUIRED SUNPOINTS. ALSO SETS THE BUTTON TO BE SELECTED
     if(pvz->getSunPoints()>=200)
     {
-    pvz->setPlantType(8);
-    ui->plant1Button->setFlat(false);
-    ui->plant2Button->setFlat(false);
-    ui->plant3Button->setFlat(false);
-    ui->plant4Button->setFlat(false);
-    ui->plant5Button->setFlat(false);
-    ui->plant6Button->setFlat(false);
-    ui->plant7Button->setFlat(false);
-    ui->plant8Button->setFlat(true);
+        pvz->setPlantType(8);
+        ui->plant1Button->setFlat(false);
+        ui->plant2Button->setFlat(false);
+        ui->plant3Button->setFlat(false);
+        ui->plant4Button->setFlat(false);
+        ui->plant5Button->setFlat(false);
+        ui->plant6Button->setFlat(false);
+        ui->plant7Button->setFlat(false);
+        ui->plant8Button->setFlat(true);
     }
 }

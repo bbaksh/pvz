@@ -26,12 +26,12 @@ protected:
     QStringList userLevel;
     QStringList levelLevel;
     QStringList levelSequence;
-    QList<QStringList> levelSequenceNumber;
+    QList<QStringList> levelSequenceNumber;//holds a lists of lists (ie a list of zombiesequences, and each zombiesequence is a list of zombie types)
     QStringList levelRows;
-    QStringList levelStart;
-    QStringList levelInterval;
-    QStringList levelDecrement;
-    bool close;
+    QStringList levelStart;//when a level starts
+    QStringList levelInterval;//how fast zombies appear after it starts
+    QStringList levelDecrement;//decrease how fast the zombies appear
+    bool close;//close the program due to an error
 
 public:
     UserManagement();
@@ -48,9 +48,7 @@ public:
     double getNameIndex(QString name);
 
 public slots:
-
-
-    QStringList userSort();
+    QStringList userSort();//sort users by timestamp
 
 
 };

@@ -20,7 +20,7 @@ Zombies::Zombies(int type,int xPos,int yPos)
     this->xPos=xPos;
     this->yPos=yPos;
     keepMoving=true;
-    if(this->type==1)
+    if(this->type==1)//creates a zombie with characteristics based on type
     {
         life=10;
         equipment=0;
@@ -29,7 +29,7 @@ Zombies::Zombies(int type,int xPos,int yPos)
         speed=5;
         zombiePicture=file.currentPath()+"/icons/zombie1.png";
     }
-    if(this->type==2)
+    if(this->type==2)//creates a zombie with characteristics based on type
     {
         alteredSpeed=1;
         life=10;
@@ -39,7 +39,7 @@ Zombies::Zombies(int type,int xPos,int yPos)
         speed=3.75;
         zombiePicture=file.currentPath()+"/icons/zombie2.png";
     }
-    if(this->type==3)
+    if(this->type==3)//creates a zombie with characteristics based on type
     {
         life=28;
         equipment=18;
@@ -48,7 +48,7 @@ Zombies::Zombies(int type,int xPos,int yPos)
         speed=5;
         zombiePicture=file.currentPath()+"/icons/zombie3.png";
     }
-    if(this->type==4)
+    if(this->type==4)//creates a zombie with characteristics based on type
     {
         life=65;
         equipment=55;
@@ -57,7 +57,7 @@ Zombies::Zombies(int type,int xPos,int yPos)
         speed=5;
         zombiePicture=file.currentPath()+"/icons/zombie4.png";
     }
-    if(this->type==5)
+    if(this->type==5)//creates a zombie with characteristics based on type
     {
         life=16;
         equipment=8;
@@ -89,7 +89,7 @@ int Zombies::getAttack() const
     return attack;
 }
 
-void Zombies::loseHealth(int damage)
+void Zombies::loseHealth(int damage)//zombie loses health
 {
     life=life-damage;
     if(life<=8&&type==5)
@@ -111,23 +111,23 @@ void Zombies::slideZombie()
 {
     if(keepMoving)
     {
-    xPos-=alteredSpeed;
+    xPos-=alteredSpeed;//move zombie by the speed
     }
 }
 
 void Zombies::loseSpeed()
 {
-    alteredSpeed=1;
+    alteredSpeed=1;//if a zombie is hit by snow pea, the speed becomes 1
 }
 
 int Zombies::timeElapsed()
 {
-    return attackRate.elapsed();
+    return attackRate.elapsed();//returns time since last attack
 }
 
 void Zombies::resetAttackRate()
 {
-    attackRate.restart();
+    attackRate.restart();//restarts the time when an attack is performed
 }
 
 void Zombies::setPosition(int xPos, int yPos)
@@ -146,7 +146,7 @@ void Zombies::advance(int phase)
     setPos(xPos,yPos);
 }
 
-bool Zombies::inArea(int x, int y)
+bool Zombies::inArea(int x, int y)//checks if a bullet is in the area of the zombie
 {
     for(int i=0;i<15;i++)
     {

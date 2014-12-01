@@ -25,7 +25,7 @@ Plants::Plants(int type, int xPos, int yPos)
     shootZombie=false;
     dead=false;
     attackRate.start();
-
+    //SETS UP THE PLANTS CHARACTERISTICS BASED ON THE TYPE THAT WAS CREATED
     if(type==1)
     {
         plantPicture=file.currentPath()+"/icons/peashooter1.png";
@@ -45,7 +45,7 @@ Plants::Plants(int type, int xPos, int yPos)
         need=0;
         shootZombie=true;
     }
-    if(type==2)
+    if(type==2)//SETS UP THE PLANTS CHARACTERISTICS BASED ON THE TYPE THAT WAS CREATED
     {
         plantPicture=file.currentPath()+"/icons/sunflower1.png";
         this->type=type;
@@ -65,7 +65,7 @@ Plants::Plants(int type, int xPos, int yPos)
         plantSun=true;
         sunSpawn.start();
     }
-    if(type==3)
+    if(type==3)//SETS UP THE PLANTS CHARACTERISTICS BASED ON THE TYPE THAT WAS CREATED
     {
         plantPicture=file.currentPath()+"/icons/cherrybomb1.png";
         this->type=type;
@@ -83,7 +83,7 @@ Plants::Plants(int type, int xPos, int yPos)
         sun=0;
         need=0;
     }
-    if(type==4)
+    if(type==4)//SETS UP THE PLANTS CHARACTERISTICS BASED ON THE TYPE THAT WAS CREATED
     {
         plantPicture=file.currentPath()+"/icons/wallnut1.png";
         this->type=type;
@@ -101,7 +101,7 @@ Plants::Plants(int type, int xPos, int yPos)
         sun=0;
         need=0;
     }
-    if(type==5)
+    if(type==5)//SETS UP THE PLANTS CHARACTERISTICS BASED ON THE TYPE THAT WAS CREATED
     {
         plantPicture=file.currentPath()+"/icons/potatomine1.png";
         this->type=type;
@@ -119,7 +119,7 @@ Plants::Plants(int type, int xPos, int yPos)
         sun=0;
         need=0;
     }
-    if(type==6)
+    if(type==6)//SETS UP THE PLANTS CHARACTERISTICS BASED ON THE TYPE THAT WAS CREATED
     {
         plantPicture=file.currentPath()+"/icons/snowpea1.png";
         this->type=type;
@@ -138,7 +138,7 @@ Plants::Plants(int type, int xPos, int yPos)
         need=0;
         shootZombie=true;
     }
-    if(type==7)
+    if(type==7)//SETS UP THE PLANTS CHARACTERISTICS BASED ON THE TYPE THAT WAS CREATED
     {
         plantPicture=file.currentPath()+"/icons/chomper1.png";this->type=type;
         this->xPos=xPos;
@@ -156,7 +156,7 @@ Plants::Plants(int type, int xPos, int yPos)
         need=0;
         chompZombie=true;
     }
-    if(type==8)
+    if(type==8)//SETS UP THE PLANTS CHARACTERISTICS BASED ON THE TYPE THAT WAS CREATED
     {
         plantPicture=file.currentPath()+"/icons/repeater1.png";this->type=type;
         this->xPos=xPos;
@@ -234,7 +234,7 @@ bool Plants::getStatus()
 
 bool Plants::okayToChomp()
 {
-    if(attackRate.elapsed()>42000)
+    if(attackRate.elapsed()>42000)//LETS CHOMPER ATTACK EVERY 42 SECONDS
     {
         chompZombie=true;
         attackRate.restart();
@@ -246,7 +246,7 @@ bool Plants::okayToChomp()
 
 bool Plants::okayToPlant()
 {
-    if(sunSpawn.elapsed()>24000)
+    if(sunSpawn.elapsed()>24000)//LETS A SUNFLOWER SPAWN A SUN EVERY 24 SECONDS
     {
         sunSpawn.restart();
         plantSun=true;

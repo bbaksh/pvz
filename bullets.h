@@ -11,10 +11,10 @@ public:
     Bullets(int type,int xPos, int yPos);
     int getX();
     int getY();
-    int getType();
+    int getType();//type of plant that makes a bullet
     int getDamage();
     void setPosition(int x, int y);
-    void slideBullet();
+    void slideBullet();//used to translate the bullet across the scene (like advance)
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 protected:
@@ -24,8 +24,8 @@ private:
     int type;
     int xPos;
     int yPos;
-    QDir file;
-    QPixmap bulletPicture;
+    QDir file;//used to get the homepath for the pixmap
+    QPixmap bulletPicture;//used to store the picture
 };
 
 #endif // BULLETS_H

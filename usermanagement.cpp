@@ -7,6 +7,7 @@ UserManagement::UserManagement()
 
 void UserManagement::readUserData(QString fileName)
 {
+    //READS THE USER.CSV FILE AND PARSES IT ACCORDINGLY
     QFile players(fileName);
     if (players.open(QIODevice::ReadOnly))
     {
@@ -15,11 +16,11 @@ void UserManagement::readUserData(QString fileName)
         QStringList values;
         while(!data.isNull())
         {
-            if(data.contains(":"))
+            if(data.contains(":"))//checks for garbage that doesnt have :
             {
                 values=data.split(":");
                 userTimestamp.append(values[0]);
-                if(nameValidation(values[1]))
+                if(nameValidation(values[1]))//CHECKS FOR NAME VALIDATION
                 {
                     userPlayer.append(values[1]);
                 }
@@ -33,7 +34,7 @@ void UserManagement::readUserData(QString fileName)
                     saveUsers(fileName);
                     break;
                 }
-                if(levelValidation(values[2]))
+                if(levelValidation(values[2]))//CHECKS FOR LEVEL VALIDATION
                 {
                     userLevel.append(values[2]);
                 }
@@ -54,19 +55,14 @@ void UserManagement::readUserData(QString fileName)
         }
         players.close();
     }
-    else
+    else//CHECKS IF FILE ISNT READ (AKA DOESNT EXIST)
     {
-//        userPlayer.append("");
-//        players.remove();
-//        userTimestamp.clear();
-//        userPlayer.clear();
-//        userLevel.clear();
-//        saveUsers(fileName);
+
         userPlayer.append("");
         userTimestamp.append("");
         userLevel.append("");
     }
-    if(userPlayer.size()==0)
+    if(userPlayer.size()==0)//CHECKS IF FILE IS EMPTY
     {
         userPlayer.append("");
         userTimestamp.append("");
@@ -80,7 +76,8 @@ void UserManagement::readUserData(QString fileName)
 
 void UserManagement::readLevelData(QString fileName)
 {
-    int n=0;
+
+    //READS THE LEVELS INFORMATION AND PARSES IT ACORDDINGLY
     QFile levels(fileName);
     if (levels.open(QIODevice::ReadOnly))
     {
@@ -97,14 +94,13 @@ void UserManagement::readLevelData(QString fileName)
             {
                 levelSequence.append(sequenceValues[i]);
             }
-            levelSequenceNumber.append(levelSequence);
+            levelSequenceNumber.append(levelSequence);//MAKES A LIST OF SEQUENCES
             levelSequence.clear();
             levelRows.append(values[2]);
             levelStart.append(values[3]);
             levelInterval.append(values[4]);
             levelDecrement.append(values[5]);
              data = reader.readLine();
-            n++;
         }
         levels.close();
     }
@@ -117,10 +113,12 @@ void UserManagement::readLevelData(QString fileName)
 
 void UserManagement::createUser(QString name)
 {
-    QString time=QString::number(QDateTime::currentDateTime().toTime_t());
+    //CREATES A USER
+    QString time=QString::number(QDateTime::currentDateTime().toTime_t());//GETS A CURRENT TIMESTAMP
     userTimestamp.append(time);
     if(nameValidation(name))
     {
+        //CUSTOM MESSAGE BOX TO CONFIRM USER CREATION
         QMessageBox invalidName;
         invalidName.setText("Are you sure you want to create this user?");
         QAbstractButton *okayButton =invalidName.addButton(QObject::tr("OKAY"),QMessageBox::ActionRole);
@@ -145,7 +143,7 @@ void UserManagement::createUser(QString name)
         userSort();
 }
 
-void UserManagement::deleteUser(int index)
+void UserManagement::deleteUser(int index)//SETS USER INFO TO NULL (THIS WONT GET SAVED IN THE SAVE FUNCTION)
 {
   userLevel[index]="NULL";
   userPlayer[index]="NULL";
@@ -154,13 +152,14 @@ void UserManagement::deleteUser(int index)
 
 void UserManagement::saveUsers(QString fileName)
 {
+    //SAVES THE FILE BY WRITING A NEW ONE WITH THE APPROPRIATE INFORMATION
     QFile players(fileName);
     if (players.open(QFile::WriteOnly|QFile::Truncate))
     {
         QTextStream write(&players);
         for(int i=0; i<userPlayer.size();i++)
         {
-            if(userTimestamp[i]!="NULL"&&userPlayer[i]!="NULL")
+            if(userTimestamp[i]!="NULL"&&userPlayer[i]!="NULL")//CHECKS THAT THE USER HASNT BEEN DELETED
             write<<userTimestamp[i]<<":"<<userPlayer[i]<<":"<<userLevel[i]<<"\r\n";
         }
         players.close();
@@ -170,7 +169,8 @@ void UserManagement::saveUsers(QString fileName)
 
 void UserManagement::updateTimestamp(QString name)
 {
-    QString time=QString::number(QDateTime::currentDateTime().toTime_t());
+    //UPDATE USER TIMESTAMP BASED ON WHAT WAS SELECTED LAST
+    QString time=QString::number(QDateTime::currentDateTime().toTime_t());//GET CURRENT TIMESTAMP
     for(int i=0;i<userTimestamp.size();i++)
     {
         if(name==userPlayer[i])
@@ -188,7 +188,7 @@ bool UserManagement::nameValidation(QString name)
 //    {
 //        for(int i=0;i<name.size();i++)
 //        {
-//            if(name[i].isLetterOrNumber())
+//            if(name[i].isLetterOrNumber())                    //OLD VALIDIATION HERE
 //                valid=true;
 //            else
 //            {
@@ -197,17 +197,18 @@ bool UserManagement::nameValidation(QString name)
 //            }
 //        }
 //    }
-    if(name.size()<10)
+    if(name.size()<10)//NEW VALIDATION BASED ON ALPHANUMERIC CHANGES IN THE PROJECT
         valid=true;
     return valid;
 }
 
 bool UserManagement::levelValidation(QString level)
 {
+    //CHECKS IF A LEVEL IS VALID
     bool valid=false;
     for(int i=0;i<level.size();i++)
     {
-        if(level[i].isDigit()&&level.toInt()>=0&&level.toInt()<=100)
+        if(level[i].isDigit()&&level.toInt()>=0&&level.toInt()<=100)//MAKES SURE LEVEL IS A NUMBER AND BETWEEN 0-100
             valid=true;
     }
 
@@ -222,6 +223,7 @@ bool UserManagement::closeProgram()
 
 double UserManagement::getIndex()
 {
+    //gets the index of the most current user (highest timestamp)
     if(userTimestamp.size()>0)
     {
         double highest=0;
@@ -240,6 +242,7 @@ double UserManagement::getIndex()
 
 double UserManagement::getNameIndex(QString name)
 {
+    //gets the index of the current player selected
     for(int i=0;i<userPlayer.size();i++)
     {
         if(name==userPlayer[i])
@@ -249,6 +252,7 @@ double UserManagement::getNameIndex(QString name)
 
 QStringList UserManagement::userSort()
 {
+    //sorts the usernames by timestamp
     int totalSize=userPlayer.size();
     QStringList sortedTimes=userTimestamp;
     if(userPlayer.size()>0)
@@ -269,7 +273,7 @@ QStringList UserManagement::userSort()
                         break;
             }
         }
-        while(sortedNames.size()>5)
+        while(sortedNames.size()>5)//only takes the top 5 for the combobox
         {
             sortedNames.pop_back();
         }

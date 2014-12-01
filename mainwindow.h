@@ -30,22 +30,23 @@ protected:
 
 private slots:
 
-   void updateSunLabel();
+   void updateSunLabel();//gets called repeatedly to update the sunlabel and the plant buttons with there cooldowns and availability
 
-   void setupNextLevel();
+   void setupNextLevel();//sets the parameters to be ready for the next level
 
-   void handleCooldown(int i);
+   void handleCooldown(int i);//disables buttons based on the plant cooldown and when it was triggered
 
-   void on_newButton_clicked();
+   void on_newButton_clicked();//make a new user
 
-   void on_deleteButton_clicked();
+   void on_deleteButton_clicked();//delete your user
 
-   void on_quitButton_clicked();
+   void on_quitButton_clicked();//rage quit
 
-   void on_userButton_activated(const QString &arg1);
+   void on_userButton_activated(const QString &arg1);//select a user
 
-   void on_startButton_clicked();
+   void on_startButton_clicked();//used to start the game
 
+  //The plant buttons trigger a plant to be active
    void on_plant1Button_clicked();
 
    void on_restartButton_clicked();
@@ -66,19 +67,16 @@ private slots:
 
 private:
 
-    GameDisplay *pvz;//accesser to ui element graphicsview
-    QString userPathName;
-    QDir playersPath;
-    QDir levelsPath;
-    QTimer *timer;
-    QTimer *updateSuns;
-    QTimer *zombieTimer;
-    QTimer *animateZombie;
-    QGraphicsPixmapItem *picture;
-    QTime plantButtons[8];
+    GameDisplay *pvz;//accesser to ui element graphicsview and handles everything done in the gamedisplay class and transmit it to mainwindow
+    QString userPathName;//gets the path to the player_csv
+    QDir playersPath;//gets the path to the player_csv
+    QDir levelsPath;//gets the path to the levels_csv
+    QTimer *timer;//used to trigger a random sun falling
+    QTimer *updateSuns;//used to update sunlabel
+    QTimer *zombieTimer;//triggers whena zombie should spawn
+    QTimer *animateZombie;//triggers zombies to move and tracks events
 signals:
-    void mouseclick(QEvent *);
-    void levelsError();
+    void levelsError();//used to identify an error and deal with it accordingly
 
 };
 

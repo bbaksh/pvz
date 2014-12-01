@@ -6,7 +6,7 @@ class GamePlay: public UserManagement
 {
 protected:
     int sunPoints;
-    QString currentUser[3];
+    QString currentUser[3];//an array of siz 3. holds the name, level and timestamp of current user
 
 public:
     GamePlay();
@@ -14,10 +14,10 @@ public:
     void addSunPoints(int x);
     int getSunPoints() const;
     void setCurrentUser();
-    void updateCurrentUser(QString name);
+    void updateCurrentUser(QString name);//used to update a user when they succesfully complete a level or is selected
     int getCurrentLevel();
     void setCurrentLevel();
-    void setLevelForEndGame();
+    void setLevelForEndGame();//used to reset the level back to 1 when the user beats level 8
 };
 
 #endif // GAMEPLAY_H
